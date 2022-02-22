@@ -39,9 +39,6 @@ const createFilterTemplate = () => {
   )
 };
 
-const createSortTemplate = () => {
-
-};
 
 const createTripInfoTemplate = () => {
   return (
@@ -436,3 +433,11 @@ const createContentTemplate = () => {
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageMainElement = pageBodyElement.querySelector(`.page-main`);
 const tripMainElement = pageBodyElement.querySelector(`.trip-main`);
+const tripControlsElement = pageBodyElement.querySelector(`.trip-controls`);
+const tripEventsElement = pageMainElement.querySelector(`.trip-events`);
+
+render(tripMainElement, createTripInfoTemplate(), `afterbegin`);
+render(tripControlsElement, createSiteMenuTemplate(), `beforeEnd`);
+render(tripControlsElement, createFilterTemplate(), `beforeEnd`);
+render(tripEventsElement, createSortTemplate(), `beforeEnd`);
+render(tripEventsElement, createContentTemplate(), `beforeEnd`);
