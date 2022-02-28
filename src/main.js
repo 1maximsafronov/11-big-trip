@@ -8,6 +8,8 @@ import FilterComponent from "./components/filter";
 import SortComponent from "./components/sort";
 import TripDaysComponent from "./components/trip-days";
 import EventComponent from "./components/event";
+import TripControls from "./components/trip-controls";
+import NewEventButton from "./components/new-event-button";
 
 import {generateEvents} from "./mock/event";
 
@@ -22,16 +24,21 @@ const renderEvents = (renderingEvents, container) => {
   renderingEvents.forEach((event) => renderEvent(container, event));
 };
 
-
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageMainElement = pageBodyElement.querySelector(`.page-main`);
 const tripMainElement = pageBodyElement.querySelector(`.trip-main`);
-const tripControlsElement = pageBodyElement.querySelector(`.trip-controls`);
 const tripEventsElement = pageMainElement.querySelector(`.trip-events`);
 
-renderElement(tripMainElement, new TripInfoComponent().getElement(), RenedrPosition.AFTERBEGIN);
-renderElement(tripControlsElement, new SiteMenuComponent().getElement(), RenedrPosition.BEFOREEND);
-renderElement(tripControlsElement, new FilterComponent().getElement(), RenedrPosition.BEFOREEND);
+const tripInfoComponent = new TripInfoComponent();
+const tripControlsComponent = new TripControls();
+const newEventButton = new NewEventButton();
+
+renderElement(tripMainElement, tripInfoComponent.getElement(), RenedrPosition.BEFOREEND);
+renderElement(tripMainElement, tripControlsComponent.getElement(), RenedrPosition.BEFOREEND);
+renderElement(tripMainElement, newEventButton.getElement(), RenedrPosition.BEFOREEND);
+
+renderElement(tripControlsComponent.getElement(), new SiteMenuComponent().getElement(), RenedrPosition.BEFOREEND);
+renderElement(tripControlsComponent.getElement(), new FilterComponent().getElement(), RenedrPosition.BEFOREEND);
 renderElement(tripEventsElement, new SortComponent().getElement(), RenedrPosition.BEFOREEND);
 renderElement(tripEventsElement, new TripDaysComponent().getElement(), RenedrPosition.BEFOREEND);
 
