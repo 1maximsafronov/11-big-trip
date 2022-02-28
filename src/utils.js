@@ -1,7 +1,7 @@
 
 import {RenedrPosition} from "./const";
 
-export const render = (container, template, place) => {
+export const renderTemplate = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
