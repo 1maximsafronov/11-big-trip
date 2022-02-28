@@ -27,6 +27,6 @@ import Abstract from "./abstract";
 export default class Filter extends Abstract {
 
   getTemplate() {
-    return createFilterTemplate(this._event);
+    return createFilterTemplate();
   }
 }

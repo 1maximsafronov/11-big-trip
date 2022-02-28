@@ -20,6 +20,6 @@ import Abstract from "./abstract";
 export default class TripInfo extends Abstract {
 
   getTemplate() {
-    return createTripInfoTemplate(this._event);
+    return createTripInfoTemplate();
   }
 }

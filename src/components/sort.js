@@ -40,6 +40,6 @@ import Abstract from "./abstract";
 export default class Sort extends Abstract {
 
   getTemplate() {
-    return createSortTemplate(this._event);
+    return createSortTemplate();
   }
 }

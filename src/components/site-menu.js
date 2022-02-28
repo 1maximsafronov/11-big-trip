@@ -12,6 +12,6 @@ import Abstract from "./abstract";
 export default class SiteMenu extends Abstract {
 
   getTemplate() {
-    return createSiteMenuTemplate(this._event);
+    return createSiteMenuTemplate();
   }
 }

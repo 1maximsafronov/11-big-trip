@@ -25,6 +25,6 @@ import Abstract from "./abstract";
 export default class Sort extends Abstract {
 
   getTemplate() {
-    return createTripDaysTemplate(this._event);
+    return createTripDaysTemplate();
   }
 }
