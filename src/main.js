@@ -4,7 +4,19 @@ import {createTripInfoTemplate} from "./components/trip-info";
 import {createSiteMenuTemplate} from "./components/site-menu";
 import {createFilterTemplate} from "./components/filter";
 import {createSortTemplate} from "./components/sort";
-import {createContentTemplate} from "./components/content";
+import {createTripDaysTemplate} from "./components/trip-days";
+import {createEventTemplate} from "./components/event";
+
+import {generateEvents} from "./mock/event";
+
+const events = generateEvents(10);
+
+const renderEvents = (renderingEvents, container, place) => {
+  renderingEvents.forEach((event) => {
+    render(container, createEventTemplate(event), place);
+  });
+};
+
 
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageMainElement = pageBodyElement.querySelector(`.page-main`);
@@ -16,4 +28,8 @@ render(tripMainElement, createTripInfoTemplate(), `afterbegin`);
 render(tripControlsElement, createSiteMenuTemplate(), `beforeEnd`);
 render(tripControlsElement, createFilterTemplate(), `beforeEnd`);
 render(tripEventsElement, createSortTemplate(), `beforeEnd`);
-render(tripEventsElement, createContentTemplate(), `beforeEnd`);
+render(tripEventsElement, createTripDaysTemplate(), `beforeEnd`);
+
+const eventsListElement = tripEventsElement.querySelector(`.trip-events__list`);
+
+renderEvents(events, eventsListElement, `beforeEnd`);
