@@ -1,3 +1,6 @@
+
+import {RenedrPosition} from "./const";
+
 export const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -16,4 +19,23 @@ export const getRandomBool = () => {
 
 export const capitalizeFirstLetter = (str) => {
   return str[0].toUpperCase() + str.substring(1);
+};
+
+
+export const renderElement = (container, element, place) => {
+  switch (place) {
+    case RenedrPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenedrPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+export const createElement = (template) =>{
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
 };
