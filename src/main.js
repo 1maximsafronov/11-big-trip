@@ -11,10 +11,13 @@ import EventComponent from "./components/event";
 import TripControlsComponent from "./components/trip-controls";
 import NewEventButtonComponent from "./components/new-event-button";
 import EventEditComponent from "./components/event-edit";
+import NoEventsComponent from "./components/no-events";
 
 import {generateEvents} from "./mock/event";
 
-const events = generateEvents(10);
+const EVENTS_COUNTER = 10;
+
+const events = generateEvents(EVENTS_COUNTER);
 
 const renderEvent = (container, event) => {
   const eventComponent = new EventComponent(event);
@@ -61,6 +64,21 @@ const renderEvents = (renderingEvents, container) => {
   renderingEvents.forEach((event) => renderEvent(container, event));
 };
 
+const renderTripEvents = (container, tripEvents) => {
+
+  if (tripEvents.length <= 0) {
+    renderElement(container, new NoEventsComponent().getElement(), RenedrPosition.BEFOREEND);
+    return;
+  }
+
+  renderElement(container, new SortComponent().getElement(), RenedrPosition.BEFOREEND);
+  renderElement(container, new TripDaysComponent().getElement(), RenedrPosition.BEFOREEND);
+
+  const eventsListElement = container.querySelector(`.trip-events__list`);
+
+  renderEvents(tripEvents, eventsListElement);
+};
+
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageMainElement = pageBodyElement.querySelector(`.page-main`);
 const tripMainElement = pageBodyElement.querySelector(`.trip-main`);
@@ -76,9 +94,5 @@ renderElement(tripMainElement, newEventButton.getElement(), RenedrPosition.BEFOR
 
 renderElement(tripControlsComponent.getElement(), new SiteMenuComponent().getElement(), RenedrPosition.BEFOREEND);
 renderElement(tripControlsComponent.getElement(), new FilterComponent().getElement(), RenedrPosition.BEFOREEND);
-renderElement(tripEventsElement, new SortComponent().getElement(), RenedrPosition.BEFOREEND);
-renderElement(tripEventsElement, new TripDaysComponent().getElement(), RenedrPosition.BEFOREEND);
 
-const eventsListElement = tripEventsElement.querySelector(`.trip-events__list`);
-
-renderEvents(events, eventsListElement);
+renderTripEvents(tripEventsElement, events);
