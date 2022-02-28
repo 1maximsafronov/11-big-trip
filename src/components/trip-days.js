@@ -1,4 +1,4 @@
-export const createTripDaysTemplate = () => {
+const createTripDaysTemplate = () => {
 
   const counter = 1;
   const dateTyme = `2019-03-18`;
@@ -18,3 +18,13 @@ export const createTripDaysTemplate = () => {
     </ul>`
   );
 };
+
+
+import Abstract from "./abstract";
+
+export default class Sort extends Abstract {
+
+  getTemplate() {
+    return createTripDaysTemplate(this._event);
+  }
+}
