@@ -8,8 +8,9 @@ import FilterComponent from "./components/filter";
 import SortComponent from "./components/sort";
 import TripDaysComponent from "./components/trip-days";
 import EventComponent from "./components/event";
-import TripControls from "./components/trip-controls";
-import NewEventButton from "./components/new-event-button";
+import TripControlsComponent from "./components/trip-controls";
+import NewEventButtonComponent from "./components/new-event-button";
+import EventEditComponent from "./components/event-edit";
 
 import {generateEvents} from "./mock/event";
 
@@ -17,6 +18,42 @@ const events = generateEvents(10);
 
 const renderEvent = (container, event) => {
   const eventComponent = new EventComponent(event);
+  const eventEditComponent = new EventEditComponent(event);
+
+  const replaceEventToEdit = () => {
+    container.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+  };
+
+  const replaceEditToEvent = () => {
+    container.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+  };
+
+  const onEscKeyDown = (evt) => {
+    const isEscKey = evt.key === `Esc` || evt.key === `Escape`;
+
+    if (isEscKey) {
+      evt.preventDefault();
+      replaceEditToEvent();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
+  const editButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
+  const ediForm = eventEditComponent.getElement().querySelector(`form`);
+
+  editButton.addEventListener(`click`, (evt)=> {
+    evt.preventDefault();
+    replaceEventToEdit();
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
+
+  ediForm.addEventListener(`submit`, (evt)=> {
+    evt.preventDefault();
+    replaceEditToEvent();
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  });
+
+
   renderElement(container, eventComponent.getElement(), RenedrPosition.BEFOREEND);
 };
 
@@ -30,8 +67,8 @@ const tripMainElement = pageBodyElement.querySelector(`.trip-main`);
 const tripEventsElement = pageMainElement.querySelector(`.trip-events`);
 
 const tripInfoComponent = new TripInfoComponent();
-const tripControlsComponent = new TripControls();
-const newEventButton = new NewEventButton();
+const tripControlsComponent = new TripControlsComponent();
+const newEventButton = new NewEventButtonComponent();
 
 renderElement(tripMainElement, tripInfoComponent.getElement(), RenedrPosition.BEFOREEND);
 renderElement(tripMainElement, tripControlsComponent.getElement(), RenedrPosition.BEFOREEND);
