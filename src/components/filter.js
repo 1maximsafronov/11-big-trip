@@ -1,4 +1,4 @@
-export const createFilterTemplate = () => {
+const createFilterTemplate = () => {
   return (
     `<form class="trip-filters" action="#" method="get">
         <div class="trip-filters__filter">
@@ -20,3 +20,13 @@ export const createFilterTemplate = () => {
       </form>`
   );
 };
+
+
+import Abstract from "./abstract";
+
+export default class Filter extends Abstract {
+
+  getTemplate() {
+    return createFilterTemplate();
+  }
+}

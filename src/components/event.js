@@ -13,7 +13,7 @@ const createOffersMarkup = (offers) => {
   }).join(`\n`);
 };
 
-export const createEventTemplate = (event) => {
+const createEventTemplate = (event) => {
   const {
     type,
     basePrice,
@@ -60,3 +60,18 @@ export const createEventTemplate = (event) => {
     </li>`
   );
 };
+
+
+import Abstract from "./abstract";
+
+export default class Event extends Abstract {
+  constructor(event) {
+    super();
+
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createEventTemplate(this._event);
+  }
+}

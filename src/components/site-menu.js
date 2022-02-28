@@ -1,4 +1,4 @@
-export const createSiteMenuTemplate = () => {
+const createSiteMenuTemplate = () => {
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
         <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
@@ -6,3 +6,12 @@ export const createSiteMenuTemplate = () => {
       </nav>`
   );
 };
+
+import Abstract from "./abstract";
+
+export default class SiteMenu extends Abstract {
+
+  getTemplate() {
+    return createSiteMenuTemplate();
+  }
+}
