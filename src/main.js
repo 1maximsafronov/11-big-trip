@@ -23,60 +23,57 @@ const renderEvent = (container, event) => {
   const eventComponent = new EventComponent(event);
   const eventEditComponent = new EventEditComponent(event);
 
-  const replaceEventToEdit = () => {
+  const replaceCardToEdit = () => {
     container.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+    document.addEventListener(`keydown`, onEscKeyDown);
   };
 
-  const replaceEditToEvent = () => {
+  const replaceEditToCard = () => {
     container.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+    document.removeEventListener(`keydown`, onEscKeyDown);
   };
 
   const onEscKeyDown = (evt) => {
-    const isEscKey = evt.key === `Esc` || evt.key === `Escape`;
-
-    if (isEscKey) {
+    if (evt.key === `Esc` || evt.key === `Escape`) {
       evt.preventDefault();
-      replaceEditToEvent();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      replaceEditToCard();
     }
   };
 
   const editButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
-  const ediForm = eventEditComponent.getElement().querySelector(`form`);
+  const editForm = eventEditComponent.getElement().querySelector(`form`);
 
   editButton.addEventListener(`click`, (evt)=> {
     evt.preventDefault();
-    replaceEventToEdit();
-    document.addEventListener(`keydown`, onEscKeyDown);
+    replaceCardToEdit();
   });
 
-  ediForm.addEventListener(`submit`, (evt)=> {
+  editForm.addEventListener(`submit`, (evt)=> {
     evt.preventDefault();
-    replaceEditToEvent();
-    document.removeEventListener(`keydown`, onEscKeyDown);
+    replaceEditToCard();
   });
 
 
-  render(container, eventComponent.getElement(), RenedrPosition.BEFOREEND);
+  render(container, eventComponent);
 };
 
-const renderEvents = (renderingEvents, container) => {
+const renderEvents = (container, renderingEvents) => {
   renderingEvents.forEach((event) => renderEvent(container, event));
 };
 
 const renderTripEvents = (container, tripEvents) => {
 
   if (tripEvents.length <= 0) {
-    render(container, new NoEventsComponent().getElement(), RenedrPosition.BEFOREEND);
+    render(container, new NoEventsComponent());
     return;
   }
 
-  render(container, new SortComponent().getElement(), RenedrPosition.BEFOREEND);
-  render(container, new TripDaysComponent().getElement(), RenedrPosition.BEFOREEND);
+  render(container, new SortComponent());
+  render(container, new TripDaysComponent());
 
   const eventsListElement = container.querySelector(`.trip-events__list`);
 
-  renderEvents(tripEvents, eventsListElement);
+  renderEvents(eventsListElement, tripEvents);
 };
 
 const pageBodyElement = document.querySelector(`.page-body`);
@@ -88,11 +85,11 @@ const tripInfoComponent = new TripInfoComponent();
 const tripControlsComponent = new TripControlsComponent();
 const newEventButton = new NewEventButtonComponent();
 
-render(tripMainElement, tripInfoComponent.getElement(), RenedrPosition.BEFOREEND);
-render(tripMainElement, tripControlsComponent.getElement(), RenedrPosition.BEFOREEND);
-render(tripMainElement, newEventButton.getElement(), RenedrPosition.BEFOREEND);
+render(tripMainElement, tripInfoComponent);
+render(tripMainElement, tripControlsComponent);
+render(tripMainElement, newEventButton);
 
-render(tripControlsComponent.getElement(), new SiteMenuComponent().getElement(), RenedrPosition.BEFOREEND);
-render(tripControlsComponent.getElement(), new FilterComponent().getElement(), RenedrPosition.BEFOREEND);
+render(tripControlsComponent, new SiteMenuComponent());
+render(tripControlsComponent, new FilterComponent());
 
 renderTripEvents(tripEventsElement, events);
