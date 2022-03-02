@@ -1,4 +1,6 @@
-const createEventEditTemplate = () => {
+import Abstract from "./abstract";
+
+const createTemplate = () => {
   return (
     `<li class="trip-events__item">
       <form class="event  event--edit" action="#" method="post">
@@ -176,7 +178,6 @@ const createEventEditTemplate = () => {
   );
 };
 
-import Abstract from "./abstract";
 
 export default class EventEdit extends Abstract {
   constructor(event) {
@@ -185,7 +186,7 @@ export default class EventEdit extends Abstract {
     this._event = event;
   }
 
-  getTemplate() {
-    return createEventEditTemplate(this._event);
+  _getTemplate() {
+    return createTemplate(this._event);
   }
 }

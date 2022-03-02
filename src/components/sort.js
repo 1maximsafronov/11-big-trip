@@ -1,4 +1,6 @@
-const createSortTemplate = () => {
+import Abstract from "./abstract";
+
+const createTemplate = () => {
 
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -34,12 +36,8 @@ const createSortTemplate = () => {
   );
 };
 
-
-import Abstract from "./abstract";
-
 export default class Sort extends Abstract {
-
-  getTemplate() {
-    return createSortTemplate();
+  _getTemplate() {
+    return createTemplate();
   }
 }

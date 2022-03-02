@@ -13,8 +13,7 @@ const createTemplate = () => {
 };
 
 export default class TripControls extends Abstract {
-
-  getTemplate() {
+  _getTemplate() {
     return createTemplate();
   }
 }

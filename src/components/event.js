@@ -1,5 +1,5 @@
 import {capitalizeFirstLetter} from "../utils";
-
+import Abstract from "./abstract";
 
 const createOffersMarkup = (offers) => {
   return offers.map(({title, price}) => {
@@ -13,7 +13,7 @@ const createOffersMarkup = (offers) => {
   }).join(`\n`);
 };
 
-const createEventTemplate = (event) => {
+const createTemplate = (event) => {
   const {
     type,
     basePrice,
@@ -61,9 +61,6 @@ const createEventTemplate = (event) => {
   );
 };
 
-
-import Abstract from "./abstract";
-
 export default class Event extends Abstract {
   constructor(event) {
     super();
@@ -71,7 +68,7 @@ export default class Event extends Abstract {
     this._event = event;
   }
 
-  getTemplate() {
-    return createEventTemplate(this._event);
+  _getTemplate() {
+    return createTemplate(this._event);
   }
 }
