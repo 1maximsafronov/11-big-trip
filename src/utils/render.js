@@ -45,6 +45,11 @@ export const replace = (newChild, oldChild) => {
   }
 
   const parent = oldChild.parentElement;
+
+  if (parent === null || oldChild === null || newChild === null) {
+    throw new Error(`replace() | Нельзя заменить несуществующий элемент`);
+  }
+
   parent.replaceChild(newChild, oldChild);
 };
 

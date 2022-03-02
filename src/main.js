@@ -24,12 +24,12 @@ const renderEvent = (container, event) => {
   const eventEditComponent = new EventEditComponent(event);
 
   const replaceCardToEdit = () => {
-    container.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+    replace(eventEditComponent, eventComponent);
     document.addEventListener(`keydown`, onEscKeyDown);
   };
 
   const replaceEditToCard = () => {
-    container.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+    replace(eventComponent, eventEditComponent);
     document.removeEventListener(`keydown`, onEscKeyDown);
   };
 
@@ -47,11 +47,11 @@ const renderEvent = (container, event) => {
 };
 
 const renderEvents = (container, renderingEvents) => {
-  renderingEvents.forEach((event) => renderEvent(container, event));
+  renderingEvents
+    .forEach((event) => renderEvent(container, event));
 };
 
 const renderTripEvents = (container, tripEvents) => {
-
   if (tripEvents.length <= 0) {
     render(container, new NoEventsComponent());
     return;
