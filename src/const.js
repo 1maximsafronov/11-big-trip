@@ -6,3 +6,9 @@ export const RenedrPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`,
 };
+
+export const SortType = {
+  DEFAULT: `sort-event`,
+  BY_TIME: `sort-time`,
+  BY_PRICE: `sort-price`,
+};
