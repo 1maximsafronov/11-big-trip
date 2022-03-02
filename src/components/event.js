@@ -1,5 +1,5 @@
-import {capitalizeFirstLetter} from "../utils";
-
+import {capitalizeFirstLetter} from "../utils/common";
+import Abstract from "./abstract";
 
 const createOffersMarkup = (offers) => {
   return offers.map(({title, price}) => {
@@ -13,7 +13,7 @@ const createOffersMarkup = (offers) => {
   }).join(`\n`);
 };
 
-const createEventTemplate = (event) => {
+const createTemplate = (event) => {
   const {
     type,
     basePrice,
@@ -61,17 +61,27 @@ const createEventTemplate = (event) => {
   );
 };
 
-
-import Abstract from "./abstract";
-
 export default class Event extends Abstract {
   constructor(event) {
     super();
 
     this._event = event;
+
+    this._editBtnClickHandler = this._editBtnClickHandler.bind(this);
   }
 
-  getTemplate() {
-    return createEventTemplate(this._event);
+  _getTemplate() {
+    return createTemplate(this._event);
+  }
+
+  _editBtnClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editBtnClick();
+  }
+
+  setEditBtnClickHandler(callback) {
+    this._callback.editBtnClick = callback;
+    const editBtn = this.getElement().querySelector(`.event__rollup-btn`);
+    editBtn.addEventListener(`click`, this._editBtnClickHandler);
   }
 }

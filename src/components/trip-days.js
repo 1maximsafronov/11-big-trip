@@ -1,8 +1,8 @@
-const createTripDaysTemplate = () => {
+import Abstract from "./abstract";
 
+const createTemplate = () => {
   const counter = 1;
   const dateTyme = `2019-03-18`;
-
   const formatDate = `MAR 18`;
 
   return (
@@ -19,12 +19,8 @@ const createTripDaysTemplate = () => {
   );
 };
 
-
-import Abstract from "./abstract";
-
 export default class Sort extends Abstract {
-
-  getTemplate() {
-    return createTripDaysTemplate();
+  _getTemplate() {
+    return createTemplate();
   }
 }

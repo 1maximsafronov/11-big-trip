@@ -1,4 +1,6 @@
-const createTripInfoTemplate = () => {
+import Abstract from "./abstract";
+
+const createTemplate = () => {
   return (
     `<section class="trip-main__trip-info  trip-info">
         <div class="trip-info__main">
@@ -14,12 +16,8 @@ const createTripInfoTemplate = () => {
   );
 };
 
-
-import Abstract from "./abstract";
-
 export default class TripInfo extends Abstract {
-
-  getTemplate() {
-    return createTripInfoTemplate();
+  _getTemplate() {
+    return createTemplate();
   }
 }

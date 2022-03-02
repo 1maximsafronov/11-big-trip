@@ -1,4 +1,6 @@
-const createEventEditTemplate = () => {
+import Abstract from "./abstract";
+
+const createTemplate = () => {
   return (
     `<li class="trip-events__item">
       <form class="event  event--edit" action="#" method="post">
@@ -176,16 +178,29 @@ const createEventEditTemplate = () => {
   );
 };
 
-import Abstract from "./abstract";
 
 export default class EventEdit extends Abstract {
   constructor(event) {
     super();
 
     this._event = event;
+
+    this._submitHandler = this._submitHandler.bind(this);
   }
 
-  getTemplate() {
-    return createEventEditTemplate(this._event);
+  _getTemplate() {
+    return createTemplate(this._event);
+  }
+
+  _submitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit();
+  }
+
+  setSubmitHandler(callback) {
+    this._callback.submit = callback;
+
+    const editForm = this.getElement().querySelector(`form`);
+    editForm.addEventListener(`submit`, this._submitHandler);
   }
 }
