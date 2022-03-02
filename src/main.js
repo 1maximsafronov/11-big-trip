@@ -1,4 +1,4 @@
-import {render} from "./utils/render";
+import {render, replace} from "./utils/render";
 import {RenedrPosition} from "./const";
 
 
@@ -40,19 +40,8 @@ const renderEvent = (container, event) => {
     }
   };
 
-  const editButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
-  const editForm = eventEditComponent.getElement().querySelector(`form`);
-
-  editButton.addEventListener(`click`, (evt)=> {
-    evt.preventDefault();
-    replaceCardToEdit();
-  });
-
-  editForm.addEventListener(`submit`, (evt)=> {
-    evt.preventDefault();
-    replaceEditToCard();
-  });
-
+  eventComponent.setEditBtnClickHandler(() => replaceCardToEdit());
+  eventEditComponent.setSubmitHandler(() => replaceEditToCard());
 
   render(container, eventComponent);
 };

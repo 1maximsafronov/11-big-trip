@@ -184,9 +184,23 @@ export default class EventEdit extends Abstract {
     super();
 
     this._event = event;
+
+    this._submitHandler = this._submitHandler.bind(this);
   }
 
   _getTemplate() {
     return createTemplate(this._event);
+  }
+
+  _submitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit();
+  }
+
+  setSubmitHandler(callback) {
+    this._callback.submit = callback;
+
+    const editForm = this.getElement().querySelector(`form`);
+    editForm.addEventListener(`submit`, this._submitHandler);
   }
 }

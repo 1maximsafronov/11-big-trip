@@ -66,9 +66,22 @@ export default class Event extends Abstract {
     super();
 
     this._event = event;
+
+    this._editBtnClickHandler = this._editBtnClickHandler.bind(this);
   }
 
   _getTemplate() {
     return createTemplate(this._event);
+  }
+
+  _editBtnClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editBtnClick();
+  }
+
+  setEditBtnClickHandler(callback) {
+    this._callback.editBtnClick = callback;
+    const editBtn = this.getElement().querySelector(`.event__rollup-btn`);
+    editBtn.addEventListener(`click`, this._editBtnClickHandler);
   }
 }
