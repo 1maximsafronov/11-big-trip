@@ -1,4 +1,4 @@
-import {getRandomInt, getRandomBool, getRandomArrItem} from "../utils";
+import {getRandomInt, getRandomBool, getRandomArrItem} from "../utils/common";
 import {generateDestination} from "./destination";
 
 const eventTypes = [

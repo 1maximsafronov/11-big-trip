@@ -1,4 +1,4 @@
-import {capitalizeFirstLetter} from "../utils";
+import {capitalizeFirstLetter} from "../utils/common";
 import Abstract from "./abstract";
 
 const createOffersMarkup = (offers) => {

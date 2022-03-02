@@ -1,4 +1,4 @@
-import {renderElement} from "./utils";
+import {render} from "./utils/render";
 import {RenedrPosition} from "./const";
 
 
@@ -57,7 +57,7 @@ const renderEvent = (container, event) => {
   });
 
 
-  renderElement(container, eventComponent.getElement(), RenedrPosition.BEFOREEND);
+  render(container, eventComponent.getElement(), RenedrPosition.BEFOREEND);
 };
 
 const renderEvents = (renderingEvents, container) => {
@@ -67,12 +67,12 @@ const renderEvents = (renderingEvents, container) => {
 const renderTripEvents = (container, tripEvents) => {
 
   if (tripEvents.length <= 0) {
-    renderElement(container, new NoEventsComponent().getElement(), RenedrPosition.BEFOREEND);
+    render(container, new NoEventsComponent().getElement(), RenedrPosition.BEFOREEND);
     return;
   }
 
-  renderElement(container, new SortComponent().getElement(), RenedrPosition.BEFOREEND);
-  renderElement(container, new TripDaysComponent().getElement(), RenedrPosition.BEFOREEND);
+  render(container, new SortComponent().getElement(), RenedrPosition.BEFOREEND);
+  render(container, new TripDaysComponent().getElement(), RenedrPosition.BEFOREEND);
 
   const eventsListElement = container.querySelector(`.trip-events__list`);
 
@@ -88,11 +88,11 @@ const tripInfoComponent = new TripInfoComponent();
 const tripControlsComponent = new TripControlsComponent();
 const newEventButton = new NewEventButtonComponent();
 
-renderElement(tripMainElement, tripInfoComponent.getElement(), RenedrPosition.BEFOREEND);
-renderElement(tripMainElement, tripControlsComponent.getElement(), RenedrPosition.BEFOREEND);
-renderElement(tripMainElement, newEventButton.getElement(), RenedrPosition.BEFOREEND);
+render(tripMainElement, tripInfoComponent.getElement(), RenedrPosition.BEFOREEND);
+render(tripMainElement, tripControlsComponent.getElement(), RenedrPosition.BEFOREEND);
+render(tripMainElement, newEventButton.getElement(), RenedrPosition.BEFOREEND);
 
-renderElement(tripControlsComponent.getElement(), new SiteMenuComponent().getElement(), RenedrPosition.BEFOREEND);
-renderElement(tripControlsComponent.getElement(), new FilterComponent().getElement(), RenedrPosition.BEFOREEND);
+render(tripControlsComponent.getElement(), new SiteMenuComponent().getElement(), RenedrPosition.BEFOREEND);
+render(tripControlsComponent.getElement(), new FilterComponent().getElement(), RenedrPosition.BEFOREEND);
 
 renderTripEvents(tripEventsElement, events);
