@@ -1,5 +1,6 @@
 import {getRandomInt, getRandomBool, getRandomArrItem} from "../utils/common";
 import {generateDestination} from "./destination";
+import {nanoid} from "nanoid";
 
 const eventTypes = [
   `taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`,
@@ -7,7 +8,7 @@ const eventTypes = [
 
 export const generateEvent = () => {
   return {
-    id: ``,
+    id: nanoid(),
     type: getRandomArrItem(eventTypes),
     dateTo: ``,
     dateFrom: ``,
