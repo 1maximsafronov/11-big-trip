@@ -20,7 +20,7 @@ export default class Abstract {
 
   getElement() {
     if (this._element === null) {
-      this._element = createElement(this._getTemplate());
+      this._element = this._createElement();
     }
 
     return this._element;
