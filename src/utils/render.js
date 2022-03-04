@@ -16,7 +16,7 @@ export const renderTemplate = (container, template, place = RenedrPosition.BEFOR
   container.insertAdjacentHTML(place, template);
 };
 
-export const render = (container, child, place = RenedrPosition.BEFOREEND) => {
+export const renderComponent = (container, child, place) => {
   if (container instanceof Abstract) {
     container = container.getElement();
   }
@@ -32,6 +32,20 @@ export const render = (container, child, place = RenedrPosition.BEFOREEND) => {
     case RenedrPosition.BEFOREEND:
       container.append(child);
       break;
+  }
+};
+
+export const render = (container, child, place = RenedrPosition.BEFOREEND) => {
+  if (!(child instanceof Array)) {
+    renderComponent(container, child, place);
+
+    return;
+  }
+
+  const items = child;
+
+  for (const item of items) {
+    renderComponent(container, item, place);
   }
 };
 
