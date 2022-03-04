@@ -6,28 +6,33 @@ const eventTypes = [
   `taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`,
 ];
 
-export const generateEvent = () => {
+const generateOffers = (offers, type) => {
+  const arr = offers
+    .find((item) => item.type === type)
+    .offers
+    .slice().sort(()=> getRandomBool());
+
+  return arr.slice(0, getRandomInt(0, arr.length - 1));
+};
+
+export const generateEvent = (arr) => {
+  const type = getRandomArrItem(eventTypes);
+  const offers = generateOffers(arr, type);
+
   return {
     id: nanoid(),
-    type: getRandomArrItem(eventTypes),
+    type,
     dateTo: ``,
     dateFrom: ``,
     basePrice: getRandomInt(100, 1000),
     isFavorite: getRandomBool(),
     destination: generateDestination(),
-    offers: [
-      {
-        title: `Первое чтото`,
-        price: getRandomInt(20, 250),
-      },
-      {
-        title: `И чтото второе`,
-        price: getRandomInt(20, 250),
-      },
-    ],
+    offers,
   };
 };
 
-export const generateEvents = (count) => {
-  return new Array(count).fill(``).map(generateEvent);
+export const generateEvents = (count, offers) => {
+  return new Array(count).fill(``).map(() => {
+    return generateEvent(offers);
+  });
 };

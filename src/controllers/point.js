@@ -12,6 +12,7 @@ export default class Point {
   constructor(container) {
     this._container = container;
     this._event = null;
+    this._offers = [];
     this._mode = Mode.DEFAULT;
     this._eventComponent = null;
     this._eventEditComponent = null;
@@ -21,11 +22,11 @@ export default class Point {
     this._handleFormSubmitHandler = this._handleFormSubmitHandler.bind(this);
   }
 
-  init(event) {
+  init(event, offers) {
     this._event = event;
-
+    this._offers = offers;
     this._eventComponent = new EventComponent(event);
-    this._eventEditComponent = new EventEditComponent(event);
+    this._eventEditComponent = new EventEditComponent(event, offers);
 
     this._eventComponent.setEditBtnClickHandler(this._handleEditBtnClickHandler);
     this._eventEditComponent.setSubmitHandler(this._handleFormSubmitHandler);

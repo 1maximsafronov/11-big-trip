@@ -1,39 +1,6 @@
 import {createElement, render} from "../utils/render";
 import Abstract from "./abstract";
 
-const offers = [
-  {
-    name: `luggage`,
-    title: `Add luggage`,
-    price: 30,
-    isChecked: true,
-  },
-  {
-    name: `comfort`,
-    title: `Switch to comfort class`,
-    price: 100,
-    isChecked: true,
-  },
-  {
-    name: `meal`,
-    title: `Add meal`,
-    price: 15,
-    isChecked: false,
-  },
-  {
-    name: `seats`,
-    title: `Choose seats`,
-    price: 5,
-    isChecked: false,
-  },
-  {
-    name: `train`,
-    title: `Travel by train`,
-    price: 40,
-    isChecked: false,
-  },
-];
-
 const createHeaderTemplate = () => {
   return (
     `<header class="event__header">
@@ -157,7 +124,7 @@ const createHeaderTemplate = () => {
 
 
 export default class EventEdit extends Abstract {
-  constructor(event) {
+  constructor(event, offers) {
     super();
 
     this._event = event;
@@ -212,8 +179,9 @@ export default class EventEdit extends Abstract {
 
   _getOffersListElement() {
     const el = createElement(`<div class="event__available-offers"></div>`);
+    const offers = this._offers.find((item) => item.type === this._event.type).offers;
 
-    for (const offer of this._offers) {
+    for (const offer of offers) {
       render(el, this._getOfferElement(offer));
     }
 

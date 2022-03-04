@@ -11,6 +11,7 @@ export default class Trip {
   constructor(container) {
     this._container = container;
     this._events = [];
+    this._offers = [];
     this._currentSortType = SortType.DEFAULT;
 
     this._pointController = {};
@@ -24,7 +25,7 @@ export default class Trip {
 
   _renderEvent(container, event) {
     const pointController = new PointController(container);
-    pointController.init(event);
+    pointController.init(event, this._offers);
   }
 
   _renderEvents(container, renderingEvents) {
@@ -89,9 +90,10 @@ export default class Trip {
     this._renderEvents(eventsListElement, this._events);
   }
 
-  render(events) {
+  render(events, offers) {
     this._events = events.slice();
     this._sourcedEvents = events.slice();
+    this._offers = offers;
 
     this._renderTrip();
   }

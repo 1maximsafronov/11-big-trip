@@ -10,10 +10,12 @@ import FilterComponent from "./components/filter";
 import TripController from "./controllers/trip";
 
 import {generateEvents} from "./mock/event";
+import {generateOffers} from "./mock/offer";
 
-const EVENTS_COUNTER = 10;
+const EVENTS_COUNTER = 3;
 
-const events = generateEvents(EVENTS_COUNTER);
+const offers = generateOffers();
+const events = generateEvents(EVENTS_COUNTER, offers);
 
 
 const pageBodyElement = document.querySelector(`.page-body`);
@@ -31,4 +33,4 @@ render(tripControlsComponent, new SiteMenuComponent());
 render(tripControlsComponent, new FilterComponent());
 
 const tripController = new TripController(tripEventsElement);
-tripController.render(events);
+tripController.render(events, offers);
