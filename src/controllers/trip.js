@@ -1,17 +1,19 @@
-import {render, replace} from "../utils/render";
+import {render} from "../utils/render";
 import {SortType} from "../const";
 
-import EventEditComponent from "../components/event-edit";
 import NoEventsComponent from "../components/no-events";
 import TripDaysComponent from "../components/trip-days";
-import EventComponent from "../components/event";
 import SortComponent from "../components/sort";
+
+import PointController from "./point";
 
 export default class Trip {
   constructor(container) {
     this._container = container;
     this._events = [];
     this._currentSortType = SortType.DEFAULT;
+
+    this._pointController = {};
 
     this._noEventsComponent = new NoEventsComponent();
     this._sortComponent = new SortComponent();
@@ -21,30 +23,8 @@ export default class Trip {
   }
 
   _renderEvent(container, event) {
-    const eventComponent = new EventComponent(event);
-    const eventEditComponent = new EventEditComponent(event);
-
-    const replaceCardToEdit = () => {
-      replace(eventEditComponent, eventComponent);
-      document.addEventListener(`keydown`, onEscKeyDown);
-    };
-
-    const replaceEditToCard = () => {
-      replace(eventComponent, eventEditComponent);
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Esc` || evt.key === `Escape`) {
-        evt.preventDefault();
-        replaceEditToCard();
-      }
-    };
-
-    eventComponent.setEditBtnClickHandler(() => replaceCardToEdit());
-    eventEditComponent.setSubmitHandler(() => replaceEditToCard());
-
-    render(container, eventComponent);
+    const pointController = new PointController(container);
+    pointController.init(event);
   }
 
   _renderEvents(container, renderingEvents) {
