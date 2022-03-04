@@ -9,13 +9,13 @@ import FilterComponent from "./components/filter";
 
 import TripController from "./controllers/trip";
 
-import {generateEvents} from "./mock/event";
+import {generatePoints} from "./mock/event";
 import {generateOffers} from "./mock/offer";
 
-const EVENTS_COUNTER = 10;
+const POINTS_COUNT = 10;
 
 const offers = generateOffers();
-const events = generateEvents(EVENTS_COUNTER, offers);
+const points = generatePoints(POINTS_COUNT, offers);
 
 
 const pageBodyElement = document.querySelector(`.page-body`);
@@ -33,4 +33,4 @@ render(tripControlsComponent, new SiteMenuComponent());
 render(tripControlsComponent, new FilterComponent());
 
 const tripController = new TripController(tripEventsElement);
-tripController.render(events, offers);
+tripController.init(points, offers);

@@ -2,7 +2,7 @@ import {getRandomInt, getRandomBool, getRandomArrItem} from "../utils/common";
 import {generateDestination} from "./destination";
 import {nanoid} from "nanoid";
 
-const eventTypes = [
+const PointTypes = [
   `taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`,
 ];
 
@@ -15,8 +15,8 @@ const generateOffers = (offers, type) => {
   return arr.slice(0, getRandomInt(0, arr.length - 1));
 };
 
-export const generateEvent = (arr) => {
-  const type = getRandomArrItem(eventTypes);
+export const generatePoint = (arr) => {
+  const type = getRandomArrItem(PointTypes);
   const offers = generateOffers(arr, type);
 
   return {
@@ -31,8 +31,8 @@ export const generateEvent = (arr) => {
   };
 };
 
-export const generateEvents = (count, offers) => {
+export const generatePoints = (count, offers) => {
   return new Array(count).fill(``).map(() => {
-    return generateEvent(offers);
+    return generatePoint(offers);
   });
 };

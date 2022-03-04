@@ -10,7 +10,7 @@ import PointController from "./point";
 export default class Trip {
   constructor(container) {
     this._container = container;
-    this._events = [];
+    this._points = [];
     this._offers = [];
     this._currentSortType = SortType.DEFAULT;
 
@@ -24,15 +24,15 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
   }
 
-  _renderEvent(container, event) {
+  _renderPoint(container, point) {
     const pointController = new PointController(container, this._handleModeChange);
-    pointController.init(event, this._offers);
-    this._pointController[event.id] = pointController;
+    pointController.init(point, this._offers);
+    this._pointController[point.id] = pointController;
   }
 
-  _renderEvents(container, renderingEvents) {
-    renderingEvents
-    .forEach((event) => this._renderEvent(container, event));
+  _renderPoints(container, points) {
+    points
+    .forEach((point) => this._renderPoint(container, point));
   }
 
   _handleModeChange() {
@@ -41,16 +41,16 @@ export default class Trip {
       .forEach((controller) => controller.resetView());
   }
 
-  _sortEvents(sortType) {
+  _sortPoints(sortType) {
     switch (sortType) {
       case SortType.BY_PRICE:
-        this._events.sort((eventA, eventB) => eventB.basePrice - eventA.basePrice);
+        this._points.sort((pointA, pointB) => pointB.basePrice - pointA.basePrice);
         break;
       case SortType.BY_TIME:
-        this._events = this._sourcedEvents.slice();
+        this._points = this._sourcedPoints.slice();
         break;
       default:
-        this._events = this._sourcedEvents.slice();
+        this._points = this._sourcedPoints.slice();
     }
 
     this._currentSortType = sortType;
@@ -61,12 +61,12 @@ export default class Trip {
       return;
     }
 
-    this._sortEvents(sortType);
-    this._clearEventList();
+    this._sortPoints(sortType);
+    this._clearPointsList();
 
     const eventsListElement = this._container.querySelector(`.trip-events__list`);
 
-    this._renderEvents(eventsListElement, this._events);
+    this._renderPoints(eventsListElement, this._points);
   }
 
   _renderSort() {
@@ -79,14 +79,14 @@ export default class Trip {
     render(this._container, this._noEventsComponent);
   }
 
-  _clearEventList() {
+  _clearPointsList() {
     Object
       .values(this._pointController)
       .forEach((controller) => controller.destroy());
   }
 
   _renderTrip() {
-    if (this._events.length <= 0) {
+    if (this._points.length <= 0) {
       this._renderNoEvents();
       return;
     }
@@ -96,12 +96,12 @@ export default class Trip {
 
     const eventsListElement = this._container.querySelector(`.trip-events__list`);
 
-    this._renderEvents(eventsListElement, this._events);
+    this._renderPoints(eventsListElement, this._points);
   }
 
-  render(events, offers) {
-    this._events = events.slice();
-    this._sourcedEvents = events.slice();
+  init(points, offers) {
+    this._points = points.slice();
+    this._sourcedPoints = points.slice();
     this._offers = offers;
 
     this._renderTrip();
