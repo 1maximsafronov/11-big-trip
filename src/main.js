@@ -12,7 +12,7 @@ import TripController from "./controllers/trip";
 import {generateEvents} from "./mock/event";
 import {generateOffers} from "./mock/offer";
 
-const EVENTS_COUNTER = 3;
+const EVENTS_COUNTER = 10;
 
 const offers = generateOffers();
 const events = generateEvents(EVENTS_COUNTER, offers);

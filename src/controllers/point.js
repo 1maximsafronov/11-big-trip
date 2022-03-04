@@ -9,11 +9,12 @@ const Mode = {
 };
 
 export default class Point {
-  constructor(container) {
+  constructor(container, changeMode) {
     this._container = container;
     this._event = null;
     this._offers = [];
     this._mode = Mode.DEFAULT;
+    this._changeMode = changeMode;
     this._eventComponent = null;
     this._eventEditComponent = null;
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
@@ -37,6 +38,7 @@ export default class Point {
   _replaceCardToForm() {
     replace(this._eventEditComponent, this._eventComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
+    this._changeMode();
     this._mode = Mode.EDIT;
   }
 
@@ -64,5 +66,11 @@ export default class Point {
   destroy() {
     remove(this._eventComponent);
     remove(this._eventEditComponent);
+  }
+
+  resetView() {
+    if (this._mode === Mode.EDIT) {
+      this._replaceFormToCard();
+    }
   }
 }
