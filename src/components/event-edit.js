@@ -1,6 +1,10 @@
 import {createElement, render} from "../utils/render";
 import Smart from "./smart";
 
+import flatpickr from "flatpickr";
+
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+
 const createHeaderTemplate = (event) => {
   const {isFavorite, type} = event;
   return (
@@ -135,6 +139,7 @@ export default class EventEdit extends Smart {
 
     this._data = event;
     this._offers = offers;
+    this._datepicker = null;
 
     this._submitHandler = this._submitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
@@ -158,6 +163,30 @@ export default class EventEdit extends Smart {
 
     const editForm = this.getElement().querySelector(`form`);
     editForm.addEventListener(`submit`, this._submitHandler);
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement()
+      .querySelector(`.event__favorite-checkbox`)
+      .addEventListener(`change`, this._favoriteClickHandler);
+  }
+
+  _typeChangeHandler(evt) {
+    this.updateData({
+      type: evt.target.value
+    });
+  }
+
+  _setInnerHandlers() {
+    const typeList = this.getElement().querySelector(`.event__type-list`);
+
+    typeList.addEventListener(`change`, this._typeChangeHandler);
   }
 
   _getHeaderElement() {
@@ -234,33 +263,16 @@ export default class EventEdit extends Smart {
     return el;
   }
 
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.favoriteClick();
-  }
-
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
-    this.getElement()
-      .querySelector(`.event__favorite-checkbox`)
-      .addEventListener(`change`, this._favoriteClickHandler);
-  }
-
-  _typeChangeHandler(evt) {
-    this.updateData({
-      type: evt.target.value
-    });
-  }
-
-  _setInnerHandlers() {
-    const typeList = this.getElement().querySelector(`.event__type-list`);
-
-    typeList.addEventListener(`change`, this._typeChangeHandler);
-  }
-
   restoreHandlers() {
     this._setInnerHandlers();
     this.setSubmitHandler(this._callback.submit);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
+  }
+
+  _setDatepicker() {
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
   }
 }
