@@ -1,14 +1,14 @@
 import {createElement, render} from "../utils/render";
-import Abstract from "./abstract";
+import Smart from "./smart";
 
 const createHeaderTemplate = (event) => {
-  const {isFavorite} = event;
+  const {isFavorite, type} = event;
   return (
     `<header class="event__header">
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+          <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
         </label>
         <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -129,15 +129,19 @@ const createHeaderTemplate = (event) => {
 };
 
 
-export default class EventEdit extends Abstract {
+export default class EventEdit extends Smart {
   constructor(event, offers) {
     super();
 
-    this._event = event;
+    this._data = event;
     this._offers = offers;
 
     this._submitHandler = this._submitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   _getTemplate() {
@@ -157,7 +161,7 @@ export default class EventEdit extends Abstract {
   }
 
   _getHeaderElement() {
-    const el = createElement(createHeaderTemplate(this._event));
+    const el = createElement(createHeaderTemplate(this._data));
 
     return el;
   }
@@ -187,7 +191,7 @@ export default class EventEdit extends Abstract {
 
   _getOffersListElement() {
     const el = createElement(`<div class="event__available-offers"></div>`);
-    const offers = this._offers.find((item) => item.type === this._event.type).offers;
+    const offers = this._offers.find((item) => item.type === this._data.type).offers;
 
     for (const offer of offers) {
       render(el, this._getOfferElement(offer));
@@ -240,5 +244,23 @@ export default class EventEdit extends Abstract {
     this.getElement()
       .querySelector(`.event__favorite-checkbox`)
       .addEventListener(`change`, this._favoriteClickHandler);
+  }
+
+  _typeChangeHandler(evt) {
+    this.updateData({
+      type: evt.target.value
+    });
+  }
+
+  _setInnerHandlers() {
+    const typeList = this.getElement().querySelector(`.event__type-list`);
+
+    typeList.addEventListener(`change`, this._typeChangeHandler);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setSubmitHandler(this._callback.submit);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 }
