@@ -1,32 +1,38 @@
 import {getRandomInt, getRandomBool, getRandomArrItem} from "../utils/common";
 import {generateDestination} from "./destination";
+import {nanoid} from "nanoid";
 
-const eventTypes = [
+const PointTypes = [
   `taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`,
 ];
 
-export const generateEvent = () => {
+const generateOffers = (offers, type) => {
+  const arr = offers
+    .find((item) => item.type === type)
+    .offers
+    .slice().sort(()=> getRandomBool());
+
+  return arr.slice(0, getRandomInt(1, arr.length - 1));
+};
+
+export const generatePoint = (arr) => {
+  const type = getRandomArrItem(PointTypes);
+  const offers = generateOffers(arr, type);
+
   return {
-    id: ``,
-    type: getRandomArrItem(eventTypes),
+    id: nanoid(),
+    type,
     dateTo: ``,
     dateFrom: ``,
     basePrice: getRandomInt(100, 1000),
     isFavorite: getRandomBool(),
     destination: generateDestination(),
-    offers: [
-      {
-        title: `Первое чтото`,
-        price: getRandomInt(20, 250),
-      },
-      {
-        title: `И чтото второе`,
-        price: getRandomInt(20, 250),
-      },
-    ],
+    offers,
   };
 };
 
-export const generateEvents = (count) => {
-  return new Array(count).fill(``).map(generateEvent);
+export const generatePoints = (count, offers) => {
+  return new Array(count).fill(``).map(() => {
+    return generatePoint(offers);
+  });
 };

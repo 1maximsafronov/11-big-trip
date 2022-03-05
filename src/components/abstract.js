@@ -14,9 +14,13 @@ export default class Abstract {
     throw new Error(`Нужно переопределить метод getTemplate()`);
   }
 
+  _createElement() {
+    return createElement(this._getTemplate());
+  }
+
   getElement() {
     if (this._element === null) {
-      this._element = createElement(this._getTemplate());
+      this._element = this._createElement();
     }
 
     return this._element;
