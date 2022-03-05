@@ -12,7 +12,7 @@ const generateOffers = (offers, type) => {
     .offers
     .slice().sort(()=> getRandomBool());
 
-  return arr.slice(0, getRandomInt(0, arr.length - 1));
+  return arr.slice(0, getRandomInt(1, arr.length - 1));
 };
 
 export const generatePoint = (arr) => {

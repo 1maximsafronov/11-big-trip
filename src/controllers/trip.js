@@ -22,10 +22,21 @@ export default class Trip {
 
     this._handleSortChange = this._handleSortChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleDataChange = this._handleDataChange.bind(this);
+  }
+
+  _updateItem(arr, updatedItem) {
+    const index = arr.findIndex((item) => item.id === updatedItem.id);
+  }
+
+  _handleDataChange(updatetPoint) {
+    this._pointController[updatetPoint.id].init(updatetPoint, this._offers);
+
+    console.log(updatetPoint.isFavorite ? `Фаворит` : `Не фаворит`);
   }
 
   _renderPoint(container, point) {
-    const pointController = new PointController(container, this._handleModeChange);
+    const pointController = new PointController(container, this._handleModeChange, this._handleDataChange);
     pointController.init(point, this._offers);
     this._pointController[point.id] = pointController;
   }
