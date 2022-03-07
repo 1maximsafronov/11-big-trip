@@ -17,7 +17,6 @@ const POINTS_COUNT = 10;
 const offers = generateOffers();
 const points = generatePoints(POINTS_COUNT, offers);
 
-
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageMainElement = pageBodyElement.querySelector(`.page-main`);
 const tripMainElement = pageBodyElement.querySelector(`.trip-main`);
