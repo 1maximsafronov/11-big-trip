@@ -8,9 +8,9 @@ import SortComponent from "../components/sort";
 import PointController from "./point";
 
 export default class Trip {
-  constructor(container) {
+  constructor(container, pointsModel) {
     this._container = container;
-    this._points = [];
+    this._pointsModel = pointsModel;
     this._offers = [];
     this._currentSortType = SortType.DEFAULT;
 
@@ -25,8 +25,10 @@ export default class Trip {
     this._handleDataChange = this._handleDataChange.bind(this);
   }
 
-  _updateItem(arr, updatedItem) {
-    const index = arr.findIndex((item) => item.id === updatedItem.id);
+  init(points, offers) {
+    this._offers = offers;
+
+    this._renderTrip();
   }
 
   _handleDataChange(updatetPoint) {
@@ -52,32 +54,18 @@ export default class Trip {
       .forEach((controller) => controller.resetView());
   }
 
-  _sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.BY_PRICE:
-        this._points.sort((pointA, pointB) => pointB.basePrice - pointA.basePrice);
-        break;
-      case SortType.BY_TIME:
-        this._points = this._sourcedPoints.slice();
-        break;
-      default:
-        this._points = this._sourcedPoints.slice();
-    }
-
-    this._currentSortType = sortType;
-  }
-
   _handleSortChange(sortType) {
     if (sortType === this._currentSortType) {
       return;
     }
 
-    this._sortPoints(sortType);
+    this._currentSortType = sortType;
+
     this._clearPointsList();
 
     const eventsListElement = this._container.querySelector(`.trip-events__list`);
 
-    this._renderPoints(eventsListElement, this._points);
+    this._renderPoints(eventsListElement, this._getPoints());
   }
 
   _renderSort() {
@@ -97,7 +85,7 @@ export default class Trip {
   }
 
   _renderTrip() {
-    if (this._points.length <= 0) {
+    if (this._getPoints().length <= 0) {
       this._renderNoEvents();
       return;
     }
@@ -107,14 +95,22 @@ export default class Trip {
 
     const eventsListElement = this._container.querySelector(`.trip-events__list`);
 
-    this._renderPoints(eventsListElement, this._points);
+    this._renderPoints(eventsListElement, this._getPoints());
   }
 
-  init(points, offers) {
-    this._points = points.slice();
-    this._sourcedPoints = points.slice();
-    this._offers = offers;
+  _getPoints() {
+    const points = this._pointsModel.getPoints();
 
-    this._renderTrip();
+    switch (this._currentSortType) {
+      case SortType.BY_PRICE:
+        points.sort((pointA, pointB) => pointB.basePrice - pointA.basePrice);
+        break;
+      case SortType.BY_TIME:
+        // сортировка point по времени
+        break;
+    }
+
+
+    return points;
   }
 }
