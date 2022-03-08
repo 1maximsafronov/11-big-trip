@@ -36,4 +36,4 @@ const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
 
 const tripController = new TripController(tripEventsElement, pointsModel);
-tripController.init(points, offers);
+tripController.init(offers);
