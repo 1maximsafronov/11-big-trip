@@ -8,6 +8,7 @@ import TripInfoComponent from "./components/trip-info";
 import FilterComponent from "./components/filter";
 
 import TripController from "./controllers/trip";
+import PointsModel from "./models/points";
 
 import {generatePoints} from "./mock/event";
 import {generateOffers} from "./mock/offer";
@@ -16,7 +17,6 @@ const POINTS_COUNT = 10;
 
 const offers = generateOffers();
 const points = generatePoints(POINTS_COUNT, offers);
-
 
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageMainElement = pageBodyElement.querySelector(`.page-main`);
@@ -32,5 +32,8 @@ render(tripMainElement, new NewEventButtonComponent());
 render(tripControlsComponent, new SiteMenuComponent());
 render(tripControlsComponent, new FilterComponent());
 
-const tripController = new TripController(tripEventsElement);
-tripController.init(points, offers);
+const pointsModel = new PointsModel();
+pointsModel.setPoints(points);
+
+const tripController = new TripController(tripEventsElement, pointsModel);
+tripController.init(offers);

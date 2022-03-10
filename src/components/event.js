@@ -1,5 +1,14 @@
 import {capitalizeFirstLetter} from "../utils/common";
 import Abstract from "./abstract";
+import moment from "moment";
+
+const getEventDuration = (dateFrom, dateTo) => {
+  const diff = moment(dateTo).diff(dateFrom, `minutes`);
+  const d = Math.floor(diff / 60 / 24);
+  const h = Math.floor(diff / 60 % 24);
+  const m = diff % 60;
+  return `${d}D ${h}H ${m}M`;
+};
 
 const createOffersMarkup = (offers) => {
   return offers.map(({title, price}) => {
@@ -18,10 +27,14 @@ const createTemplate = (event) => {
     type,
     basePrice,
     offers,
-    destination
+    destination,
+    dateFrom,
+    dateTo
   } = event;
 
-  const eventDuration = `30M`;
+  const startTime = moment(dateFrom).format(`HH:mm`);
+  const endTime = moment(dateTo).format(`HH:mm`);
+  const eventDuration = getEventDuration(dateFrom, dateTo);
 
   const city = destination.name;
   const title = `${capitalizeFirstLetter(type)} to ${city}`;
@@ -37,9 +50,9 @@ const createTemplate = (event) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+            <time class="event__start-time" datetime="2019-03-18T10:30">${startTime}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+            <time class="event__end-time" datetime="2019-03-18T11:00">${endTime} </time>
           </p>
           <p class="event__duration">${eventDuration}</p>
         </div>
