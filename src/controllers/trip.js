@@ -1,4 +1,4 @@
-import {render, remove} from "../utils/render";
+import {render, remove, replace} from "../utils/render";
 import {SortType} from "../const";
 import moment from "moment";
 
@@ -9,10 +9,23 @@ import TripDayItemComponent from "../components/trip-day-item";
 
 import PointController from "./point";
 
-const getDateWithoutTime = (date) => {
-  // const newDate = new Date(moment(date).format(`YYYY-MM-DD`));
-  // return newDate;
-  return moment(date).format(`YYYY-MM-DD`);
+const sortPoints = (sortType, points) => {
+  switch (sortType) {
+    case SortType.BY_PRICE:
+      points.sort((pointA, pointB) => pointB.basePrice - pointA.basePrice);
+      break;
+    case SortType.BY_TIME:
+      points.sort((pointA, pointB) => {
+        const diffA = moment(pointA.dateFrom).diff(pointA.dateTo);
+        const diffB = moment(pointB.dateFrom).diff(pointB.dateTo);
+        return diffA - diffB;
+      });
+      break;
+    default:
+      points.sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
+  }
+
+  return points;
 };
 
 export default class Trip {
@@ -46,15 +59,26 @@ export default class Trip {
   }
 
   _renderNoEvents() {
+    if (this._noEventsComponent !== null) {
+      remove(this._noEventsComponent);
+      this._noEventsComponent = null;
+    }
     this._noEventsComponent = new NoEventsComponent();
     render(this._container, this._noEventsComponent);
   }
 
   _renderSort() {
+    const prevSortComponent = this._sortComponent;
     this._sortComponent = new SortComponent();
-    render(this._container, this._sortComponent);
-
     this._sortComponent.setSortTypeChangeHandler(this._handleSortChange);
+
+    if (prevSortComponent === null) {
+      render(this._container, this._sortComponent);
+      return;
+    }
+
+    replace(this._sortComponent, prevSortComponent);
+    remove(prevSortComponent);
   }
 
   _renderTripDays() {
@@ -103,36 +127,18 @@ export default class Trip {
 
   _getPoints() {
     const points = this._pointsModel.getPoints();
-
-    switch (this._currentSortType) {
-      case SortType.BY_PRICE:
-        points.sort((pointA, pointB) => pointB.basePrice - pointA.basePrice);
-        break;
-      case SortType.BY_TIME:
-        // сортировка point по времени
-        points.sort((pointA, pointB) => {
-          const diffA = moment(pointA.dateFrom).diff(pointA.dateTo);
-          const diffB = moment(pointB.dateFrom).diff(pointB.dateTo);
-          return diffA - diffB;
-        });
-        break;
-      default:
-        points.sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
-    }
-
-
-    return points;
+    const sortedPoints = sortPoints(this._currentSortType, points);
+    return sortedPoints;
   }
 
   _getPointsByDays() {
+    let days = [];
     const points = this._getPoints();
     const unicDays = new Set();
 
     points.forEach((point) => {
-      unicDays.add(getDateWithoutTime(point.dateFrom));
+      unicDays.add(moment(point.dateFrom).format(`YYYY-MM-DD`));
     });
-
-    let days = [];
 
     unicDays.forEach((day) => {
       days.push({
@@ -159,9 +165,7 @@ export default class Trip {
     }
 
     this._currentSortType = sortType;
-
     this._clearPointsList();
-
     this._renderTripDays();
   }
 
