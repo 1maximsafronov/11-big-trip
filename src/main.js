@@ -1,6 +1,6 @@
 import {render} from "./utils/render";
 // import {RenedrPosition} from "./const";
-
+import Api from "./api";
 import NewEventButtonComponent from "./components/new-event-button";
 import TripControlsComponent from "./components/trip-controls";
 import SiteMenuComponent from "./components/site-menu";
@@ -13,8 +13,11 @@ import PointsModel from "./models/points";
 import {generatePoints} from "./mock/event";
 import {generateOffers} from "./mock/offer";
 
-const POINTS_COUNT = 10;
+const END_POINT = `https://15.ecmascript.pages.academy/big-trip`;
+const AUTH_TOKEN = `Basic 5oDAQcFxqGT1ZpU`;
 
+const POINTS_COUNT = 10;
+const api = new Api(END_POINT, AUTH_TOKEN);
 const offers = generateOffers();
 const points = generatePoints(POINTS_COUNT, offers);
 
@@ -37,3 +40,7 @@ pointsModel.setPoints(points);
 
 const tripController = new TripController(tripEventsElement, pointsModel);
 tripController.init(offers);
+
+api.getPoints().then((response) => console.log(response));
+api.getOffers().then((response) => console.log(response));
+api.getDestinations().then((response) => console.log(response));
