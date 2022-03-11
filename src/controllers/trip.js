@@ -1,13 +1,11 @@
+import moment from "moment";
+import SortComponent from "../components/sort";
+import PointController from "./point";
+import NoEventsComponent from "../components/no-events";
+import TripDayItemComponent from "../components/trip-day-item";
+import TripDaysListComponent from "../components/trip-days";
 import {render, remove, replace} from "../utils/render";
 import {SortType} from "../const";
-import moment from "moment";
-
-import NoEventsComponent from "../components/no-events";
-import SortComponent from "../components/sort";
-import TripDaysListComponent from "../components/trip-days";
-import TripDayItemComponent from "../components/trip-day-item";
-
-import PointController from "./point";
 
 const sortPoints = (sortType, points) => {
   switch (sortType) {

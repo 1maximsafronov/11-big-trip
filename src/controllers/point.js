@@ -1,5 +1,5 @@
 import {remove, render, replace} from "../utils/render";
-
+import {extendObject} from "../utils/common";
 import EventEditComponent from "../components/event-edit";
 import EventComponent from "../components/event";
 
@@ -18,10 +18,12 @@ export default class Point {
     this._changeData = changeData;
     this._eventComponent = null;
     this._eventEditComponent = null;
-    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
 
-    this._handleEditBtnClickHandler = this._handleEditBtnClickHandler.bind(this);
-    this._handleFormSubmitHandler = this._handleFormSubmitHandler.bind(this);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleEditBtnClick = this._handleEditBtnClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleEditFormSubmit = this._handleEditFormSubmit.bind(this);
+    this._handleEditCloseBtnClick = this._handleEditCloseBtnClick.bind(this);
   }
 
   init(event, offers) {
@@ -34,16 +36,10 @@ export default class Point {
     this._eventComponent = new EventComponent(event);
     this._eventEditComponent = new EventEditComponent(event, offers);
 
-    this._eventComponent.setEditBtnClickHandler(this._handleEditBtnClickHandler);
-    this._eventEditComponent.setSubmitHandler(this._handleFormSubmitHandler);
-    this._eventEditComponent.setFavoriteClickHandler(()=>{
-      this._changeData(Object.assign({}, this._event, {
-        isFavorite: !this._event.isFavorite
-      }));
-    });
-    this._eventEditComponent.setCloseBtnClickHandler(() => {
-      this._replaceFormToCard();
-    });
+    this._eventComponent.setEditBtnClickHandler(this._handleEditBtnClick);
+    this._eventEditComponent.setSubmitHandler(this._handleEditFormSubmit);
+    this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._eventEditComponent.setCloseBtnClickHandler(this._handleEditCloseBtnClick);
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
       render(this._container, this._eventComponent);
@@ -63,6 +59,17 @@ export default class Point {
     remove(prevEventEditComponent);
   }
 
+  destroy() {
+    remove(this._eventComponent);
+    remove(this._eventEditComponent);
+  }
+
+  resetView() {
+    if (this._mode === Mode.EDIT) {
+      this._replaceFormToCard();
+    }
+  }
+
   _replaceCardToForm() {
     replace(this._eventEditComponent, this._eventComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
@@ -76,28 +83,27 @@ export default class Point {
     this._mode = Mode.DEFAULT;
   }
 
-  _handleEditBtnClickHandler() {
+  _handleEditBtnClick() {
     this._replaceCardToForm();
   }
 
-  _handleFormSubmitHandler() {
+  _handleEditFormSubmit() {
+    this._replaceFormToCard();
+  }
+
+  _handleFavoriteClick() {
+    this._changeData(
+        extendObject(this._event, {isFavorite: !this._event.isFavorite})
+    );
+  }
+
+  _handleEditCloseBtnClick() {
     this._replaceFormToCard();
   }
 
   _escKeyDownHandler(evt) {
     if (evt.key === `Esc` || evt.key === `Escape`) {
       evt.preventDefault();
-      this._replaceFormToCard();
-    }
-  }
-
-  destroy() {
-    remove(this._eventComponent);
-    remove(this._eventEditComponent);
-  }
-
-  resetView() {
-    if (this._mode === Mode.EDIT) {
       this._replaceFormToCard();
     }
   }

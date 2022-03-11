@@ -27,4 +27,30 @@ export default class Point extends Observer {
       ...this._points.slice(index + 1, 0)
     ];
   }
+
+  static adaptToClient(data) {
+    return {
+      id: data[`id`],
+      type: data[`type`],
+      dateTo: new Date(data[`date_to`]),
+      dateFrom: new Date(data[`date_from`]),
+      basePrice: data[`base_price`],
+      isFavorite: data[`is_favorite`],
+      destination: data[`destination`],
+      offers: data[`offers`],
+    };
+  }
+
+  static adaptToServer(point) {
+    return {
+      "id": point.id,
+      "type": point.type,
+      "date_to": point.dateTo.toISOString(),
+      "date_from": point.dateFrom.toISOString(),
+      "base_price": point.basePrice,
+      "is_favorite": point.isFavorite,
+      "destination": point.destination,
+      "offers": point.offers,
+    };
+  }
 }

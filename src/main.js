@@ -41,6 +41,6 @@ pointsModel.setPoints(points);
 const tripController = new TripController(tripEventsElement, pointsModel);
 tripController.init(offers);
 
-// api.getPoints().then((response) => console.log(response));
+api.getPoints().then((response) => console.log(response));
 // api.getOffers().then((response) => console.log(response));
-// api.getDestinations().then((response) => console.log(response));
+api.getDestinations().then((response) => console.log(response));

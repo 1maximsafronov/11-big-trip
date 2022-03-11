@@ -11,3 +11,7 @@ export const getRandomBool = () => {
 export const capitalizeFirstLetter = (str) => {
   return str[0].toUpperCase() + str.substring(1);
 };
+
+export const extendObject = (objA, objB) => {
+  return Object.assign({}, objA, objB);
+};
