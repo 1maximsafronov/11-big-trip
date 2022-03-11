@@ -118,9 +118,8 @@ export default class Trip {
 
   _renderPoints(container, points) {
     for (const point of points) {
-      const pointController = new PointController(container, this._handleModeChange, this._handleViewAction);
-      const offers = this._offersModel.getOffers();
-      pointController.init(point, offers);
+      const pointController = new PointController(container, this._offersModel, this._handleModeChange, this._handleViewAction);
+      pointController.init(point);
       this._pointController[point.id] = pointController;
     }
   }

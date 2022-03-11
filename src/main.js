@@ -58,7 +58,7 @@ api.getDestinations()
   .then((data) => pointsModel.setPoints(data))
   .then(() => {
     // console.log(destinationsModel.getDestinations());
-    console.log(offersModel.getOffers());
-    console.log(pointsModel.getPoints());
+    // console.log(offersModel.getOffers());
+    // console.log(pointsModel.getPoints());
     tripController.init();
   });

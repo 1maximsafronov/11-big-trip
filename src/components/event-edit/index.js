@@ -24,16 +24,17 @@ export default class EventEdit extends Smart {
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
 
     this._setInnerHandlers();
-    this._setDatepicker();
+    // this._setDatepicker();
   }
 
   _getTemplate() {
-    return `<li class="trip-events__item"></li>`;
+    return `<form class="event event--edit" action="#" method="post"></form>`;
   }
 
 
-  _getFormElement() {
-    const el = createElement(`<form class="event  event--edit" action="#" method="post"></form>`);
+  _createElement() {
+    const el = createElement(this._getTemplate());
+
     if (this._headerComponent !== null) {
       remove(this._headerComponent);
       this._headerComponent = null;
@@ -60,15 +61,8 @@ export default class EventEdit extends Smart {
     return el;
   }
 
-  _createElement() {
-    const el = createElement(this._getTemplate());
-    render(el, this._getFormElement());
-
-    return el;
-  }
-
   _setDatepicker() {
-    if (this._datepicker) {
+    if (this._datepicker !== null) {
       this._datepicker.destroy();
       this._datepicker = null;
     }
@@ -85,7 +79,7 @@ export default class EventEdit extends Smart {
   }
 
   restoreHandlers() {
-    this._setDatepicker();
+    // this._setDatepicker();
     this._setInnerHandlers();
     this.setSubmitHandler(this._callback.submit);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
@@ -124,7 +118,7 @@ export default class EventEdit extends Smart {
 
   setSubmitHandler(cb) {
     this._callback.submit = cb;
-    this.getInnerElement(`form`)
+    this.getElement()
       .addEventListener(`submit`, this._submitHandler);
   }
 
