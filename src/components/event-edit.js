@@ -144,6 +144,7 @@ export default class EventEdit extends Smart {
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._closeBtnClickHandler = this._closeBtnClickHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -266,6 +267,10 @@ export default class EventEdit extends Smart {
     this._callback.closeBtnClick();
   }
 
+  _deleteClickHandler(evt) {
+    this._callback.deleteClick();
+  }
+
   setSubmitHandler(cb) {
     this._callback.submit = cb;
     this.getInnerElement(`form`)
@@ -282,5 +287,11 @@ export default class EventEdit extends Smart {
     this._callback.closeBtnClick = cb;
     this.getInnerElement(`.event__rollup-btn`)
       .addEventListener(`click`, this._closeBtnClickHandler);
+  }
+
+  setDeleteClickHandler(cb) {
+    this._callback.deleteClick = cb;
+    this.getInnerElement(`.event__reset-btn`)
+      .addEventListener(`click`, this._deleteClickHandler);
   }
 }

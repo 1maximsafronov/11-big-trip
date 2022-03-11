@@ -1,5 +1,6 @@
 import {remove, render, replace} from "../utils/render";
 import {extendObject} from "../utils/common";
+import {UserAction} from "../const";
 import EventEditComponent from "../components/event-edit";
 import EventComponent from "../components/event";
 
@@ -24,6 +25,7 @@ export default class Point {
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleEditFormSubmit = this._handleEditFormSubmit.bind(this);
     this._handleEditCloseBtnClick = this._handleEditCloseBtnClick.bind(this);
+    this._handleDeleteClickHandler = this._handleDeleteClickHandler.bind(this);
   }
 
   init(event, offers) {
@@ -37,8 +39,10 @@ export default class Point {
     this._eventEditComponent = new EventEditComponent(event, offers);
 
     this._eventComponent.setEditBtnClickHandler(this._handleEditBtnClick);
+
     this._eventEditComponent.setSubmitHandler(this._handleEditFormSubmit);
     this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClickHandler);
     this._eventEditComponent.setCloseBtnClickHandler(this._handleEditCloseBtnClick);
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
@@ -88,17 +92,27 @@ export default class Point {
   }
 
   _handleEditFormSubmit() {
+    this._changeData(
+        UserAction.UPDATE_POINT,
+        this._event
+    );
+
     this._replaceFormToCard();
   }
 
   _handleFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE_POINT,
         extendObject(this._event, {isFavorite: !this._event.isFavorite})
     );
   }
 
   _handleEditCloseBtnClick() {
     this._replaceFormToCard();
+  }
+
+  _handleDeleteClickHandler() {
+
   }
 
   _escKeyDownHandler(evt) {
