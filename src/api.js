@@ -21,8 +21,15 @@ export default class Api {
       .then((points) => points.map(PointsModel.adaptToClient));
   }
 
-  updatePoint() {
-
+  updatePoint(point) {
+    return this._load({
+      url: `points/${point.id}`,
+      method: Method.PUT,
+      body: JSON.stringify(PointsModel.adaptToServer(point)),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+    .then((response) => response.json())
+    .then((newPoint) => PointsModel.adaptToClient(newPoint));
   }
 
   deletePoint() {

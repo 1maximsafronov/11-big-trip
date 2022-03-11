@@ -12,13 +12,13 @@ import PointsModel from "./models/points";
 import DestinationsModel from "./models/destinations";
 import OffersModel from "./models/offers";
 
-import {generatePoints} from "./mock/event";
-import {generateOffers} from "./mock/offer";
+// import {generatePoints} from "./mock/event";
+// import {generateOffers} from "./mock/offer";
 
 const END_POINT = `https://15.ecmascript.pages.academy/big-trip`;
 const AUTH_TOKEN = `Basic 5oDAQcFxqGT1ZpU`;
 
-const POINTS_COUNT = 10;
+// const POINTS_COUNT = 10;
 
 const api = new Api(END_POINT, AUTH_TOKEN);
 const pointsModel = new PointsModel();
@@ -34,7 +34,7 @@ const tripMainElement = pageBodyElement.querySelector(`.trip-main`);
 const tripEventsElement = pageMainElement.querySelector(`.trip-events`);
 
 const tripControlsComponent = new TripControlsComponent();
-const tripController = new TripController(tripEventsElement, pointsModel, offersModel);
+const tripController = new TripController(tripEventsElement, pointsModel, offersModel, api);
 
 render(tripMainElement, [
   new TripInfoComponent(),

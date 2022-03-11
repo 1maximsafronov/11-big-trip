@@ -28,10 +28,11 @@ const sortPoints = (sortType, points) => {
 };
 
 export default class Trip {
-  constructor(container, pointsModel, offersModel) {
+  constructor(container, pointsModel, offersModel, api) {
     this._container = container;
     this._pointsModel = pointsModel;
     this._offersModel = offersModel;
+    this._api = api;
     this._pointController = {};
     this._currentSortType = SortType.DEFAULT;
     this._isLoading = false;
@@ -43,11 +44,10 @@ export default class Trip {
 
     this._handleSortChange = this._handleSortChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
-    this._handleDataChange = this._handleViewAction.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
   }
 
   init() {
-
     if (this._isLoading) {
       this._renderLoading();
       return;
@@ -179,8 +179,11 @@ export default class Trip {
   _handleViewAction(userAction, payload) {
     switch (userAction) {
       case UserAction.UPDATE_POINT:
-        console.log(`Пытаемся обновить Точку маршрута`);
-        console.log(`payload: `, payload);
+        this._api.updatePoint(payload)
+        .then((point) => {
+          this._pointsModel.updatePoint(null, point);
+          this._pointController[point.id].init(point);
+        });
         break;
       case UserAction.ADD_POINT:
         console.log(`Пытаемся добавить точку маршрута`);
