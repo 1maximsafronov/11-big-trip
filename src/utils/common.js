@@ -15,3 +15,34 @@ export const capitalizeFirstLetter = (str) => {
 export const extendObject = (objA, objB) => {
   return Object.assign({}, objA, objB);
 };
+
+const transferTypes = [
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`,
+];
+
+const activityTypes = [
+  `check-in`,
+  `sightseeing`,
+  `restaurant`,
+];
+
+export const getEventTypePlaceholder = (type) => {
+  const isTransfer = transferTypes.some((item) => item === type);
+  const isActivity = activityTypes.some((item) => item === type);
+
+  if (isTransfer) {
+    return `to`;
+  }
+
+  if (isActivity) {
+    return `in`;
+  }
+
+  return ``;
+};

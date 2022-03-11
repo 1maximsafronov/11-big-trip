@@ -25,8 +25,8 @@ const pointsModel = new PointsModel();
 const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 
-const offers = generateOffers();
-const points = generatePoints(POINTS_COUNT, offers);
+// const offers = generateOffers();
+// const points = generatePoints(POINTS_COUNT, offers);
 
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageMainElement = pageBodyElement.querySelector(`.page-main`);
@@ -34,7 +34,7 @@ const tripMainElement = pageBodyElement.querySelector(`.trip-main`);
 const tripEventsElement = pageMainElement.querySelector(`.trip-events`);
 
 const tripControlsComponent = new TripControlsComponent();
-const tripController = new TripController(tripEventsElement, pointsModel);
+const tripController = new TripController(tripEventsElement, pointsModel, offersModel);
 
 render(tripMainElement, [
   new TripInfoComponent(),
@@ -47,17 +47,18 @@ render(tripControlsComponent, [
   new FilterComponent()
 ]);
 
-pointsModel.setPoints(points);
-tripController.init(offers);
+// pointsModel.setPoints(points);
+// tripController.init(offers);
 
-// api.getDestinations()
-//   .then((data) => destinationsModel.setDestinations(data))
-//   .then(() => api.getOffers())
-//   .then((data) => offersModel.setOffers(data))
-//   .then(() => api.getPoints())
-//   .then((data) => pointsModel.setPoints(data))
-//   .then(() => {
-//     // console.log(destinationsModel.getDestinations());
-//     // console.log(offersModel.getOffers());
-//     // console.log(pointsModel.getPoints());
-//   });
+api.getDestinations()
+  .then((data) => destinationsModel.setDestinations(data))
+  .then(() => api.getOffers())
+  .then((data) => offersModel.setOffers(data))
+  .then(() => api.getPoints())
+  .then((data) => pointsModel.setPoints(data))
+  .then(() => {
+    // console.log(destinationsModel.getDestinations());
+    console.log(offersModel.getOffers());
+    console.log(pointsModel.getPoints());
+    tripController.init();
+  });

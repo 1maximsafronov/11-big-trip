@@ -70,6 +70,7 @@ export default class Point {
 
   resetView() {
     if (this._mode === Mode.EDIT) {
+      this._eventEditComponent.reset(this._event);
       this._replaceFormToCard();
     }
   }
@@ -108,6 +109,7 @@ export default class Point {
   }
 
   _handleEditCloseBtnClick() {
+    this._eventEditComponent.reset(this._event);
     this._replaceFormToCard();
   }
 
@@ -121,6 +123,7 @@ export default class Point {
   _escKeyDownHandler(evt) {
     if (evt.key === `Esc` || evt.key === `Escape`) {
       evt.preventDefault();
+      this._eventEditComponent.reset(this._event);
       this._replaceFormToCard();
     }
   }

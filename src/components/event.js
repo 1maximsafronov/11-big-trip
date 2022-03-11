@@ -1,6 +1,6 @@
 import moment from "moment";
 import Abstract from "./abstract";
-import {capitalizeFirstLetter} from "../utils/common";
+import {capitalizeFirstLetter, getEventTypePlaceholder} from "../utils/common";
 
 const OFFERS_LIMIT = 3;
 
@@ -36,7 +36,8 @@ const createTemplate = (event) => {
   const startTime = moment(dateFrom).format(`HH:mm`);
   const endTime = moment(dateTo).format(`HH:mm`);
   const eventDuration = getEventDuration(dateFrom, dateTo);
-  const title = `${capitalizeFirstLetter(type)} to ${destination.name}`;
+  const placeholder = getEventTypePlaceholder(type);
+  const title = `${capitalizeFirstLetter(type)} ${placeholder} ${destination.name}`;
 
 
   const offersMarkup = offers.slice(0, OFFERS_LIMIT)

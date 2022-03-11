@@ -28,11 +28,10 @@ const sortPoints = (sortType, points) => {
 };
 
 export default class Trip {
-  constructor(container, pointsModel) {
+  constructor(container, pointsModel, offersModel) {
     this._container = container;
     this._pointsModel = pointsModel;
-
-    this._offers = [];
+    this._offersModel = offersModel;
     this._pointController = {};
     this._currentSortType = SortType.DEFAULT;
     this._isLoading = false;
@@ -47,8 +46,7 @@ export default class Trip {
     this._handleDataChange = this._handleViewAction.bind(this);
   }
 
-  init(offers) {
-    this._offers = offers;
+  init() {
 
     if (this._isLoading) {
       this._renderLoading();
@@ -121,7 +119,8 @@ export default class Trip {
   _renderPoints(container, points) {
     for (const point of points) {
       const pointController = new PointController(container, this._handleModeChange, this._handleViewAction);
-      pointController.init(point, this._offers);
+      const offers = this._offersModel.getOffers();
+      pointController.init(point, offers);
       this._pointController[point.id] = pointController;
     }
   }
