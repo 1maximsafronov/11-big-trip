@@ -9,6 +9,8 @@ import FilterComponent from "./components/filter";
 
 import TripController from "./controllers/trip";
 import PointsModel from "./models/points";
+import DestinationsModel from "./models/destinations";
+import OffersModel from "./models/offers";
 
 import {generatePoints} from "./mock/event";
 import {generateOffers} from "./mock/offer";
@@ -17,7 +19,12 @@ const END_POINT = `https://15.ecmascript.pages.academy/big-trip`;
 const AUTH_TOKEN = `Basic 5oDAQcFxqGT1ZpU`;
 
 const POINTS_COUNT = 10;
+
 const api = new Api(END_POINT, AUTH_TOKEN);
+const pointsModel = new PointsModel();
+const offersModel = new OffersModel();
+const destinationsModel = new DestinationsModel();
+
 const offers = generateOffers();
 const points = generatePoints(POINTS_COUNT, offers);
 
@@ -27,20 +34,30 @@ const tripMainElement = pageBodyElement.querySelector(`.trip-main`);
 const tripEventsElement = pageMainElement.querySelector(`.trip-events`);
 
 const tripControlsComponent = new TripControlsComponent();
-
-render(tripMainElement, new TripInfoComponent());
-render(tripMainElement, tripControlsComponent);
-render(tripMainElement, new NewEventButtonComponent());
-
-render(tripControlsComponent, new SiteMenuComponent());
-render(tripControlsComponent, new FilterComponent());
-
-const pointsModel = new PointsModel();
-pointsModel.setPoints(points);
-
 const tripController = new TripController(tripEventsElement, pointsModel);
+
+render(tripMainElement, [
+  new TripInfoComponent(),
+  tripControlsComponent,
+  new NewEventButtonComponent()
+]);
+
+render(tripControlsComponent, [
+  new SiteMenuComponent(),
+  new FilterComponent()
+]);
+
+pointsModel.setPoints(points);
 tripController.init(offers);
 
-// api.getPoints().then((response) => console.log(response));
-// api.getOffers().then((response) => console.log(response));
-// api.getDestinations().then((response) => console.log(response));
+// api.getDestinations()
+//   .then((data) => destinationsModel.setDestinations(data))
+//   .then(() => api.getOffers())
+//   .then((data) => offersModel.setOffers(data))
+//   .then(() => api.getPoints())
+//   .then((data) => pointsModel.setPoints(data))
+//   .then(() => {
+//     // console.log(destinationsModel.getDestinations());
+//     // console.log(offersModel.getOffers());
+//     // console.log(pointsModel.getPoints());
+//   });

@@ -183,11 +183,14 @@ export default class EventEdit extends Smart {
 
   _getOffersListElement() {
     const el = createElement(`<div class="event__available-offers"></div>`);
-    const offers = this._offers.find((item) => item.type === this._data.type).offers;
+    if (this._offers.length > 0) {
+      const offers = this._offers.find((item) => item.type === this._data.type).offers;
 
-    for (const offer of offers) {
-      render(el, this._getOfferElement(offer));
+      for (const offer of offers) {
+        render(el, this._getOfferElement(offer));
+      }
     }
+
 
     return el;
   }

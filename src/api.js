@@ -1,15 +1,11 @@
 
+import PointsModel from "./models/points";
+
 const Method = {
   GET: `GET`,
   POST: `POST`,
   PUT: `PUT`,
   DELETE: `DELETE`,
-};
-
-const ApiRoute = {
-  OFFERS: `offers`,
-  POINTS: `points`,
-  DESTINATIONS: `destinations`,
 };
 
 
@@ -21,7 +17,8 @@ export default class Api {
 
   getPoints() {
     return this._load({url: `points`, method: Method.GET})
-      .then((response) => response.json());
+      .then((response) => response.json())
+      .then((points) => points.map(PointsModel.adaptToClient));
   }
 
   updatePoint() {
