@@ -15,16 +15,29 @@ export default class Point extends Observer {
   }
 
   updatePoint(action, payload) {
-    const index = this._points.findIndex((observer) => observer.id === payload.id);
+    const index = this._points.findIndex((point) => point.id === payload.id);
 
     if (index === -1) {
-      throw new Error(`Невозмонжно обновить токчку которой не существует`);
+      throw new Error(`Невозмонжно ОБНОВИТЬ токчку которой не существует`);
     }
 
     this._points = [
       ...this._points.slice(0, index),
       payload,
-      ...this._points.slice(index + 1, 0)
+      ...this._points.slice(index + 1)
+    ];
+  }
+
+  deletePoint(payload) {
+    const index = this._points.findIndex((point) => point.id === payload.id);
+
+    if (index === -1) {
+      throw new Error(`Невозмонжно УДАЛИТЬ токчку которой не существует`);
+    }
+
+    this._points = [
+      ...this._points.slice(0, index),
+      ...this._points.slice(index + 1)
     ];
   }
 

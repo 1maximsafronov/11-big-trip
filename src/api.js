@@ -32,8 +32,8 @@ export default class Api {
     .then((newPoint) => PointsModel.adaptToClient(newPoint));
   }
 
-  deletePoint() {
-
+  deletePoint(point) {
+    return this._load({url: `points/${point.id}`, method: Method.DELETE});
   }
 
   createPoint() {

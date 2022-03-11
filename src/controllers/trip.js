@@ -190,8 +190,16 @@ export default class Trip {
         console.log(`payload: `, payload);
         break;
       case UserAction.DELETE_POINT:
-        console.log(`Пытаемся удалить точку маршрута`);
-        console.log(`payload: `, payload);
+        // делаем запрос удаления
+        // удаляем току из модели
+        // удаляем созданный контроллер точки
+        // перерисовываем весь список
+        this._api.deletePoint(payload)
+          .then(() => {
+            this._pointsModel.deletePoint(payload);
+            this._clearPointsList();
+            this._renderTripDays();
+          });
         break;
     }
   }
