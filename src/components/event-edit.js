@@ -136,15 +136,14 @@ const createHeaderTemplate = (event) => {
 export default class EventEdit extends Smart {
   constructor(event, offers) {
     super();
-
     this._data = event;
     this._offers = offers;
     this._datepicker = null;
 
     this._submitHandler = this._submitHandler.bind(this);
-    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
-
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._closeBtnClickHandler = this._closeBtnClickHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -153,45 +152,9 @@ export default class EventEdit extends Smart {
     return `<li class="trip-events__item"></li>`;
   }
 
-  _submitHandler(evt) {
-    evt.preventDefault();
-    this._callback.submit();
-  }
-
-  setSubmitHandler(callback) {
-    this._callback.submit = callback;
-
-    const editForm = this.getElement().querySelector(`form`);
-    editForm.addEventListener(`submit`, this._submitHandler);
-  }
-
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.favoriteClick();
-  }
-
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
-    this.getElement()
-      .querySelector(`.event__favorite-checkbox`)
-      .addEventListener(`change`, this._favoriteClickHandler);
-  }
-
-  _typeChangeHandler(evt) {
-    this.updateData({
-      type: evt.target.value
-    });
-  }
-
-  _setInnerHandlers() {
-    const typeList = this.getElement().querySelector(`.event__type-list`);
-
-    typeList.addEventListener(`change`, this._typeChangeHandler);
-  }
 
   _getHeaderElement() {
     const el = createElement(createHeaderTemplate(this._data));
-
     return el;
   }
 
@@ -263,16 +226,58 @@ export default class EventEdit extends Smart {
     return el;
   }
 
+  _setDatepicker() {
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
+  }
+
   restoreHandlers() {
     this._setInnerHandlers();
     this.setSubmitHandler(this._callback.submit);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 
-  _setDatepicker() {
-    if (this._datepicker) {
-      this._datepicker.destroy();
-      this._datepicker = null;
-    }
+  _setInnerHandlers() {
+    this.getInnerElement(`.event__type-list`)
+      .addEventListener(`change`, this._typeChangeHandler);
+  }
+
+  _typeChangeHandler(evt) {
+    this.updateData({type: evt.target.value});
+  }
+
+  _submitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  _closeBtnClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeBtnClick();
+  }
+
+  setSubmitHandler(cb) {
+    this._callback.submit = cb;
+    this.getInnerElement(`form`)
+      .addEventListener(`submit`, this._submitHandler);
+  }
+
+  setFavoriteClickHandler(cb) {
+    this._callback.favoriteClick = cb;
+    this.getInnerElement(`.event__favorite-checkbox`)
+      .addEventListener(`change`, this._favoriteClickHandler);
+  }
+
+  setCloseBtnClickHandler(cb) {
+    this._callback.closeBtnClick = cb;
+    this.getInnerElement(`.event__rollup-btn`)
+      .addEventListener(`click`, this._closeBtnClickHandler);
   }
 }

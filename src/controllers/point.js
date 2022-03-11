@@ -41,6 +41,9 @@ export default class Point {
         isFavorite: !this._event.isFavorite
       }));
     });
+    this._eventEditComponent.setCloseBtnClickHandler(() => {
+      this._replaceFormToCard();
+    });
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
       render(this._container, this._eventComponent);

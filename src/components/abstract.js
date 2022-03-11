@@ -29,4 +29,8 @@ export default class Abstract {
   removeElement() {
     this._element = null;
   }
+
+  getInnerElement(cssSelector = ``) {
+    return this.getElement().querySelector(cssSelector);
+  }
 }

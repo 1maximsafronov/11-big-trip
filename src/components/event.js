@@ -1,6 +1,6 @@
-import {capitalizeFirstLetter} from "../utils/common";
-import Abstract from "./abstract";
 import moment from "moment";
+import Abstract from "./abstract";
+import {capitalizeFirstLetter} from "../utils/common";
 
 const getEventDuration = (dateFrom, dateTo) => {
   const diff = moment(dateTo).diff(dateFrom, `minutes`);
@@ -25,11 +25,11 @@ const createOffersMarkup = (offers) => {
 const createTemplate = (event) => {
   const {
     type,
-    basePrice,
     offers,
-    destination,
+    dateTo,
     dateFrom,
-    dateTo
+    basePrice,
+    destination,
   } = event;
 
   const startTime = moment(dateFrom).format(`HH:mm`);
@@ -79,7 +79,6 @@ export default class Event extends Abstract {
     super();
 
     this._event = event;
-
     this._editBtnClickHandler = this._editBtnClickHandler.bind(this);
   }
 
@@ -94,7 +93,7 @@ export default class Event extends Abstract {
 
   setEditBtnClickHandler(callback) {
     this._callback.editBtnClick = callback;
-    const editBtn = this.getElement().querySelector(`.event__rollup-btn`);
-    editBtn.addEventListener(`click`, this._editBtnClickHandler);
+    this.getInnerElement(`.event__rollup-btn`)
+      .addEventListener(`click`, this._editBtnClickHandler);
   }
 }
