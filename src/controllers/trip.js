@@ -1,6 +1,7 @@
 import moment from "moment";
 import SortComponent from "../components/sort";
 import PointController from "./point";
+import LoadingComponent from "../components/loading";
 import NoEventsComponent from "../components/no-events";
 import TripDayItemComponent from "../components/trip-day-item";
 import TripDaysListComponent from "../components/trip-days";
