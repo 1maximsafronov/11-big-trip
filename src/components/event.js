@@ -2,6 +2,8 @@ import moment from "moment";
 import Abstract from "./abstract";
 import {capitalizeFirstLetter} from "../utils/common";
 
+const OFFERS_LIMIT = 3;
+
 const getEventDuration = (dateFrom, dateTo) => {
   const diff = moment(dateTo).diff(dateFrom, `minutes`);
   const d = Math.floor(diff / 60 / 24);
@@ -10,17 +12,16 @@ const getEventDuration = (dateFrom, dateTo) => {
   return `${d}D ${h}H ${m}M`;
 };
 
-const createOffersMarkup = (offers) => {
-  return offers.map(({title, price}) => {
-    return (
-      `<li class="event__offer">
+const createOfferTemplate = ({title, price}) => {
+  return (
+    `<li class="event__offer">
         <span class="event__offer-title">${title}</span>
         &plus;
         &euro;&nbsp;<span class="event__offer-price">${price}</span>
       </li>`
-    );
-  }).join(`\n`);
+  );
 };
+
 
 const createTemplate = (event) => {
   const {
@@ -35,10 +36,12 @@ const createTemplate = (event) => {
   const startTime = moment(dateFrom).format(`HH:mm`);
   const endTime = moment(dateTo).format(`HH:mm`);
   const eventDuration = getEventDuration(dateFrom, dateTo);
+  const title = `${capitalizeFirstLetter(type)} to ${destination.name}`;
 
-  const city = destination.name;
-  const title = `${capitalizeFirstLetter(type)} to ${city}`;
-  const offersMarkup = createOffersMarkup(offers);
+
+  const offersMarkup = offers.slice(0, OFFERS_LIMIT)
+    .map((offer) => createOfferTemplate(offer))
+    .join(`\n`);
 
   return (
     `<li class="trip-events__item">

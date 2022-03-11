@@ -112,7 +112,10 @@ export default class Point {
   }
 
   _handleDeleteClickHandler() {
-
+    this._changeData(
+        UserAction.DELETE_POINT,
+        this._event
+    );
   }
 
   _escKeyDownHandler(evt) {
