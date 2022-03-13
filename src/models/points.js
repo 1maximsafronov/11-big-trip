@@ -15,16 +15,55 @@ export default class Point extends Observer {
   }
 
   updatePoint(action, payload) {
-    const index = this._points.findIndex((observer) => observer.id === payload.id);
+    const index = this._points.findIndex((point) => point.id === payload.id);
 
     if (index === -1) {
-      throw new Error(`Невозмонжно обновить токчку которой не существует`);
+      throw new Error(`Невозмонжно ОБНОВИТЬ токчку которой не существует`);
     }
 
     this._points = [
       ...this._points.slice(0, index),
       payload,
-      ...this._points.slice(index + 1, 0)
+      ...this._points.slice(index + 1)
     ];
+  }
+
+  deletePoint(payload) {
+    const index = this._points.findIndex((point) => point.id === payload.id);
+
+    if (index === -1) {
+      throw new Error(`Невозмонжно УДАЛИТЬ токчку которой не существует`);
+    }
+
+    this._points = [
+      ...this._points.slice(0, index),
+      ...this._points.slice(index + 1)
+    ];
+  }
+
+  static adaptToClient(data) {
+    return {
+      id: data[`id`],
+      type: data[`type`],
+      dateTo: new Date(data[`date_to`]),
+      dateFrom: new Date(data[`date_from`]),
+      basePrice: data[`base_price`],
+      isFavorite: data[`is_favorite`],
+      destination: data[`destination`],
+      offers: data[`offers`],
+    };
+  }
+
+  static adaptToServer(point) {
+    return {
+      "id": point.id,
+      "type": point.type,
+      "date_to": point.dateTo.toISOString(),
+      "date_from": point.dateFrom.toISOString(),
+      "base_price": point.basePrice,
+      "is_favorite": point.isFavorite,
+      "destination": point.destination,
+      "offers": point.offers,
+    };
   }
 }

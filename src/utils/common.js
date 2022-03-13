@@ -11,3 +11,38 @@ export const getRandomBool = () => {
 export const capitalizeFirstLetter = (str) => {
   return str[0].toUpperCase() + str.substring(1);
 };
+
+export const extendObject = (objA, objB) => {
+  return Object.assign({}, objA, objB);
+};
+
+const transferTypes = [
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`,
+];
+
+const activityTypes = [
+  `check-in`,
+  `sightseeing`,
+  `restaurant`,
+];
+
+export const getEventTypePlaceholder = (type) => {
+  const isTransfer = transferTypes.some((item) => item === type);
+  const isActivity = activityTypes.some((item) => item === type);
+
+  if (isTransfer) {
+    return `to`;
+  }
+
+  if (isActivity) {
+    return `in`;
+  }
+
+  return ``;
+};

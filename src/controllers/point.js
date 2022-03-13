@@ -1,7 +1,9 @@
 import {remove, render, replace} from "../utils/render";
-
+import {extendObject} from "../utils/common";
+import {UserAction} from "../const";
 import EventEditComponent from "../components/event-edit";
 import EventComponent from "../components/event";
+import EventContainer from "../components/event-container";
 
 const Mode = {
   DEFAULT: `default`,
@@ -9,42 +11,50 @@ const Mode = {
 };
 
 export default class Point {
-  constructor(container, changeMode, changeData) {
+  constructor(container, offersModel, changeMode, changeData) {
     this._container = container;
     this._event = null;
-    this._offers = [];
     this._mode = Mode.DEFAULT;
     this._changeMode = changeMode;
     this._changeData = changeData;
+    this._offersModel = offersModel;
+
+    this._eventContainer = null;
     this._eventComponent = null;
     this._eventEditComponent = null;
-    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
 
-    this._handleEditBtnClickHandler = this._handleEditBtnClickHandler.bind(this);
-    this._handleFormSubmitHandler = this._handleFormSubmitHandler.bind(this);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleEditBtnClick = this._handleEditBtnClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleEditFormSubmit = this._handleEditFormSubmit.bind(this);
+    this._handleEditCloseBtnClick = this._handleEditCloseBtnClick.bind(this);
+    this._handleDeleteClickHandler = this._handleDeleteClickHandler.bind(this);
   }
 
-  init(event, offers) {
+  init(event) {
     this._event = event;
-    this._offers = offers;
+    this._renderEventContainer();
+    this._renderEventCard();
+    this._renderEventEditForm();
+  }
 
+  _renderEventContainer() {
+    const prevEventContainer = this._eventContainer;
+    this._eventContainer = new EventContainer();
+
+    if (prevEventContainer === null) {
+      render(this._container, this._eventContainer);
+      return;
+    }
+  }
+
+  _renderEventCard() {
     const prevEventComponent = this._eventComponent;
-    const prevEventEditComponent = this._eventEditComponent;
+    this._eventComponent = new EventComponent(this._event);
+    this._eventComponent.setEditBtnClickHandler(this._handleEditBtnClick);
 
-    this._eventComponent = new EventComponent(event);
-    this._eventEditComponent = new EventEditComponent(event, offers);
-
-    this._eventComponent.setEditBtnClickHandler(this._handleEditBtnClickHandler);
-    this._eventEditComponent.setSubmitHandler(this._handleFormSubmitHandler);
-    this._eventEditComponent.setFavoriteClickHandler(()=>{
-      this._changeData(Object.assign({}, this._event, {
-        isFavorite: !this._event.isFavorite
-      }));
-    });
-
-    if (prevEventComponent === null || prevEventEditComponent === null) {
-      render(this._container, this._eventComponent);
-
+    if (prevEventComponent === null) {
+      render(this._eventContainer, this._eventComponent);
       return;
     }
 
@@ -52,12 +62,44 @@ export default class Point {
       replace(this._eventComponent, prevEventComponent);
     }
 
+    remove(prevEventComponent);
+  }
+
+  _renderEventEditForm() {
+    const offers = this._offersModel.getOffers();
+    const prevEventEditComponent = this._eventEditComponent;
+    this._eventEditComponent = new EventEditComponent(this._event, offers);
+
+    this._eventEditComponent.setSubmitHandler(this._handleEditFormSubmit);
+    this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClickHandler);
+    this._eventEditComponent.setCloseBtnClickHandler(this._handleEditCloseBtnClick);
+
+    if (prevEventEditComponent === null) {
+      if (this._mode === Mode.EDIT) {
+        render(this._eventContainer, this._eventEditComponent);
+      }
+      return;
+    }
+
     if (this._mode === Mode.EDIT) {
       replace(this._eventEditComponent, prevEventEditComponent);
     }
 
-    remove(prevEventComponent);
     remove(prevEventEditComponent);
+  }
+
+  destroy() {
+    remove(this._eventContainer);
+    remove(this._eventComponent);
+    remove(this._eventEditComponent);
+  }
+
+  resetView() {
+    if (this._mode === Mode.EDIT) {
+      this._eventEditComponent.reset(this._event);
+      this._replaceFormToCard();
+    }
   }
 
   _replaceCardToForm() {
@@ -73,28 +115,42 @@ export default class Point {
     this._mode = Mode.DEFAULT;
   }
 
-  _handleEditBtnClickHandler() {
+  _handleEditBtnClick() {
     this._replaceCardToForm();
   }
 
-  _handleFormSubmitHandler() {
+  _handleEditFormSubmit() {
+    this._changeData(
+        UserAction.UPDATE_POINT,
+        this._event
+    );
+
     this._replaceFormToCard();
+  }
+
+  _handleFavoriteClick() {
+    this._changeData(
+        UserAction.UPDATE_POINT,
+        extendObject(this._event, {isFavorite: !this._event.isFavorite})
+    );
+  }
+
+  _handleEditCloseBtnClick() {
+    this._eventEditComponent.reset(this._event);
+    this._replaceFormToCard();
+  }
+
+  _handleDeleteClickHandler() {
+    this._changeData(
+        UserAction.DELETE_POINT,
+        this._event
+    );
   }
 
   _escKeyDownHandler(evt) {
     if (evt.key === `Esc` || evt.key === `Escape`) {
       evt.preventDefault();
-      this._replaceFormToCard();
-    }
-  }
-
-  destroy() {
-    remove(this._eventComponent);
-    remove(this._eventEditComponent);
-  }
-
-  resetView() {
-    if (this._mode === Mode.EDIT) {
+      this._eventEditComponent.reset(this._event);
       this._replaceFormToCard();
     }
   }
