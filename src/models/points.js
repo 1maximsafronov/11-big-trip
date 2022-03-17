@@ -1,5 +1,5 @@
 import Observer from "../utils/observer";
-import {extendObject} from "../utils/common";
+import {extendObject, createStructureById} from "../utils/common";
 
 export default class Point extends Observer {
   constructor() {
@@ -8,9 +8,7 @@ export default class Point extends Observer {
   }
 
   setPoints(points) {
-    this._points = points.reduce((acc, point) => {
-      return extendObject(acc, {[point.id]: point});
-    }, {});
+    this._points = createStructureById(points);
   }
 
   getPoints() {

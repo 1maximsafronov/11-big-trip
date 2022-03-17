@@ -57,3 +57,7 @@ export const logToConsole = (mess, value = ``) => {
   console.log(`%c| `, baseStyles, value);
   console.log(`%c/-----------------------------/`, `color: green`);
 };
+
+export const createStructureById = (items) => {
+  return items.reduce((acc, item) => extendObject(acc, {[item.id]: item}), {});
+};

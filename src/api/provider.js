@@ -1,16 +1,10 @@
 import PointsModel from "../models/points";
-import {extendObject} from "../utils/common";
+import {createStructureById} from "../utils/common";
 
 const NameSpace = {
   POINTS: `points`,
   OFFERS: `offers`,
   DESTINATIONS: `destinations`,
-};
-
-const createStructure = (items) => {
-  return items.reduce((acc, item)=> {
-    return extendObject(acc, {[item.id]: item});
-  }, {});
 };
 
 export default class Provider {
@@ -23,7 +17,7 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getPoints()
       .then((points) => {
-        const items = createStructure(points.map(PointsModel.adaptToServer));
+        const items = createStructureById(points.map(PointsModel.adaptToServer));
         this._store.setItem(NameSpace.POINTS, items);
 
         return points;
@@ -108,7 +102,7 @@ export default class Provider {
           const createdPoints = response.created;
           const updatedPoints = response.updated;
 
-          const items = createStructure([...createdPoints, ...updatedPoints]);
+          const items = createStructureById([...createdPoints, ...updatedPoints]);
           this._store.setItem(NameSpace.POINTS, items);
 
           return response;
