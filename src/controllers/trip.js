@@ -36,7 +36,6 @@ export default class Trip {
     this._api = api;
     this._pointController = {};
     this._currentSortType = SortType.DEFAULT;
-    this._isLoading = false;
 
     this._sortComponent = null;
     this._tripDaysListComponent = null;
@@ -48,11 +47,13 @@ export default class Trip {
     this._handleViewAction = this._handleViewAction.bind(this);
   }
 
-  init() {
-    if (this._isLoading) {
+  init(status) {
+    if (status === `loading`) {
       this._renderLoading();
       return;
     }
+
+    remove(this._loadingComponent);
 
     if (this._getPoints().length <= 0) {
       this._renderNoPoints();

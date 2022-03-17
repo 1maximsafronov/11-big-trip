@@ -59,6 +59,8 @@ render(tripControlsComponent, [
   filterComponent
 ]);
 
+tripController.init(`loading`);
+
 const loadDestinations = () => {
   return apiWithProvider.getDestinations()
     .then((data) => destinationsModel.setDestinations(data));
@@ -83,4 +85,4 @@ const loadData = () => {
 };
 
 loadData()
-  .then(() => tripController.init());
+  .then(() => tripController.init(`loaded`));
