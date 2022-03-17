@@ -12,6 +12,7 @@ import PointsModel from "./models/points";
 import DestinationsModel from "./models/destinations";
 import OffersModel from "./models/offers";
 import Provider from "./api/provider";
+import Store from "./api/store";
 
 // import {generatePoints} from "./mock/event";
 // import {generateOffers} from "./mock/offer";
@@ -19,10 +20,15 @@ import Provider from "./api/provider";
 const END_POINT = `https://15.ecmascript.pages.academy/big-trip`;
 const AUTH_TOKEN = `Basic 5oDAQcFxqGT1ZpU`;
 
+const STORE_PREFIX = `big-trip-12-localStore`;
+const STORE_VERSION = `v1.0.0`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VERSION}`;
+
 // const POINTS_COUNT = 10;
 const localStorage = window.localStorage;
 const api = new Api(END_POINT, AUTH_TOKEN);
-const apiWithProvider = new Provider(api, localStorage);
+const store = new Store(STORE_NAME, localStorage);
+const apiWithProvider = new Provider(api, store);
 const pointsModel = new PointsModel();
 const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();

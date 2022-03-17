@@ -1,7 +1,13 @@
+const NameSpace = {
+  POINTS: `points`,
+  OFFERS: `offers`,
+  DESTINATIONS: `destinations`,
+};
+
 export default class Provider {
-  constructor(api, storage) {
+  constructor(api, store) {
     this._api = api;
-    this._storage = storage;
+    this._store = store;
   }
 
   getPoints() {
