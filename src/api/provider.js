@@ -1,3 +1,5 @@
+import PointsModel from "../models/points";
+
 const NameSpace = {
   POINTS: `points`,
   OFFERS: `offers`,
@@ -12,9 +14,10 @@ export default class Provider {
 
   getPoints() {
     return this._api.getPoints()
-      .then((response) => {
+      .then((points) => {
+        this._store.setItem(NameSpace.POINTS, points.map(PointsModel.adaptToServer));
 
-        return response;
+        return points;
       });
   }
 
@@ -40,17 +43,19 @@ export default class Provider {
 
   getOffers() {
     return this._api.getOffers()
-      .then((response) => {
+      .then((offers) => {
+        this._store.setItem(NameSpace.OFFERS, offers);
 
-        return response;
+        return offers;
       });
   }
 
   getDestinations() {
     return this._api.getDestinations()
-      .then((response) => {
+      .then((destinations) => {
+        this._store.setItem(NameSpace.DESTINATIONS, destinations);
 
-        return response;
+        return destinations;
       });
   }
 }

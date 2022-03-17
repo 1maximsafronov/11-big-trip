@@ -60,9 +60,9 @@ render(tripControlsComponent, [
 
 apiWithProvider.getDestinations()
   .then((data) => destinationsModel.setDestinations(data))
-  .then(() => api.getOffers())
+  .then(() => apiWithProvider.getOffers())
   .then((data) => offersModel.setOffers(data))
-  .then(() => api.getPoints())
+  .then(() => apiWithProvider.getPoints())
   .then((data) => pointsModel.setPoints(data))
   .then(() => {
     // console.log(destinationsModel.getDestinations());

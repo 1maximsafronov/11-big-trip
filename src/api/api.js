@@ -1,4 +1,4 @@
-import {logToConsole} from "../utils/common";
+// import {logToConsole} from "../utils/common";
 import PointsModel from "../models/points";
 
 const Method = {
@@ -17,11 +17,7 @@ export default class Api {
 
   getPoints() {
     return this._load({url: `points`, method: Method.GET})
-      .then((response) => response.json())
-      .then((data) => {
-        logToConsole(`Ответ сервера getPoints(): `, data);
-        return data;
-      })
+      .then(Api.toJSON)
       .then((points) => points.map(PointsModel.adaptToClient));
   }
 
@@ -32,11 +28,7 @@ export default class Api {
       body: JSON.stringify(PointsModel.adaptToServer(point)),
       headers: new Headers({"Content-Type": `application/json`})
     })
-    .then((response) => response.json())
-    .then((data) => {
-      logToConsole(`Ответ сервера updatePoint()`, data);
-      return data;
-    })
+    .then(Api.toJSON)
     .then((newPoint) => PointsModel.adaptToClient(newPoint));
   }
 
@@ -50,20 +42,12 @@ export default class Api {
 
   getOffers() {
     return this._load({url: `offers`, method: Method.GET})
-      .then((response) => response.json())
-      .then((data) => {
-        logToConsole(`Ответ сервера getOffers()`, data);
-        return data;
-      });
+      .then(Api.toJSON);
   }
 
   getDestinations() {
     return this._load({url: `destinations`, method: Method.GET})
-      .then((response) => response.json())
-      .then((data) => {
-        logToConsole(`Ответ сервера getDestinations()`, data);
-        return data;
-      });
+      .then(Api.toJSON);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
@@ -73,5 +57,9 @@ export default class Api {
       .catch((err)=> {
         throw err;
       });
+  }
+
+  static toJSON(response) {
+    return response.json();
   }
 }
