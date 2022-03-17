@@ -46,3 +46,14 @@ export const getEventTypePlaceholder = (type) => {
 
   return ``;
 };
+
+export const logToConsole = (mess, value = ``) => {
+  const baseStyles = [
+    `color: orange`,
+    `font-weight: bold`
+  ].join(`; `);
+  console.log(`%c/-----------------------------/`, `color: green`);
+  console.log(`%c| ${mess}: `, baseStyles);
+  console.log(`%c| `, baseStyles, value);
+  console.log(`%c/-----------------------------/`, `color: green`);
+};
