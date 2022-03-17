@@ -1,44 +1,38 @@
 import Observer from "../utils/observer";
+import {extendObject} from "../utils/common";
 
 export default class Point extends Observer {
   constructor() {
     super();
-    this._points = [];
+    this._points = {};
   }
 
   setPoints(points) {
-    this._points = points.slice();
+    this._points = points.reduce((acc, point) => {
+      return extendObject(acc, {[point.id]: point});
+    }, {});
   }
 
   getPoints() {
-    return this._points.slice();
+    return Object.values(this._points).slice();
   }
 
-  updatePoint(action, payload) {
-    const index = this._points.findIndex((point) => point.id === payload.id);
-
-    if (index === -1) {
+  updatePoint(action, point) {
+    if (!(point.id in this._points)) {
       throw new Error(`Невозмонжно ОБНОВИТЬ токчку которой не существует`);
     }
 
-    this._points = [
-      ...this._points.slice(0, index),
-      payload,
-      ...this._points.slice(index + 1)
-    ];
+    const newPoint = extendObject(this._points[point.id], point);
+
+    this._points[point.id] = newPoint;
   }
 
-  deletePoint(payload) {
-    const index = this._points.findIndex((point) => point.id === payload.id);
-
-    if (index === -1) {
+  deletePoint(point) {
+    if (!(point.id in this._points)) {
       throw new Error(`Невозмонжно УДАЛИТЬ токчку которой не существует`);
     }
 
-    this._points = [
-      ...this._points.slice(0, index),
-      ...this._points.slice(index + 1)
-    ];
+    delete this._points[point.id];
   }
 
   static adaptToClient(data) {
