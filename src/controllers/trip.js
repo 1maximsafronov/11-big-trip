@@ -60,6 +60,8 @@ export default class Trip {
       return;
     }
 
+    remove(this._noPointsComponent);
+
     this._renderSort();
     this._renderTripDays();
   }
