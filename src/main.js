@@ -1,6 +1,6 @@
 import {render} from "./utils/render";
 // import {RenedrPosition} from "./const";
-import Api from "./api";
+import Api from "./api/api.js";
 import NewEventButtonComponent from "./components/new-event-button";
 import TripControlsComponent from "./components/trip-controls";
 import SiteMenuComponent from "./components/site-menu";
