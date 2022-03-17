@@ -7,6 +7,7 @@ import TripDayItemComponent from "../components/trip-day-item";
 import TripDaysListComponent from "../components/trip-days";
 import {render, remove, replace} from "../utils/render";
 import {SortType, UserAction} from "../const";
+import {logToConsole} from "../utils/common";
 
 const sortPoints = (sortType, points) => {
   switch (sortType) {
@@ -186,8 +187,7 @@ export default class Trip {
         });
         break;
       case UserAction.ADD_POINT:
-        console.log(`Пытаемся добавить точку маршрута`);
-        console.log(`payload: `, payload);
+        logToConsole(`Пытаемся добавить точку маршрута`, payload);
         break;
       case UserAction.DELETE_POINT:
         // делаем запрос удаления
