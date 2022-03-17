@@ -58,15 +58,28 @@ render(tripControlsComponent, [
 // pointsModel.setPoints(points);
 // tripController.init(offers);
 
-apiWithProvider.getDestinations()
-  .then((data) => destinationsModel.setDestinations(data))
-  .then(() => apiWithProvider.getOffers())
-  .then((data) => offersModel.setOffers(data))
-  .then(() => apiWithProvider.getPoints())
-  .then((data) => pointsModel.setPoints(data))
-  .then(() => {
-    // console.log(destinationsModel.getDestinations());
-    // console.log(offersModel.getOffers());
-    // console.log(pointsModel.getPoints());
-    tripController.init();
-  });
+const loadDestinations = () => {
+  return apiWithProvider.getDestinations()
+    .then((data) => destinationsModel.setDestinations(data));
+};
+
+const loadOffers = () => {
+  return apiWithProvider.getOffers()
+    .then((data) => offersModel.setOffers(data));
+};
+
+const loadPoints = () => {
+  return apiWithProvider.getPoints()
+    .then((data) => pointsModel.setPoints(data));
+};
+
+const loadData = () => {
+  return Promise.all([
+    loadDestinations(),
+    loadOffers(),
+    loadPoints()
+  ]);
+};
+
+loadData()
+  .then(() => tripController.init());
