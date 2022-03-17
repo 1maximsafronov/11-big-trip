@@ -1,9 +1,16 @@
 import PointsModel from "../models/points";
+import {extendObject} from "../utils/common";
 
 const NameSpace = {
   POINTS: `points`,
   OFFERS: `offers`,
   DESTINATIONS: `destinations`,
+};
+
+const createStructure = (items) => {
+  return items.reduce((acc, item)=> {
+    return extendObject(acc, {[item.id]: item});
+  }, {});
 };
 
 export default class Provider {
@@ -16,13 +23,17 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getPoints()
       .then((points) => {
-        this._store.setItem(NameSpace.POINTS, points.map(PointsModel.adaptToServer));
+        const items = createStructure(points.map(PointsModel.adaptToServer));
+        this._store.setItem(NameSpace.POINTS, items);
 
         return points;
       });
     }
 
-    return Promise.reject(`Не описаны действия в режиме offline`);
+    const storedPoints = this._store.getItem(NameSpace.POINTS);
+    const points = Object.values(storedPoints).map(PointsModel.adaptToClient).slice();
+
+    return Promise.resolve(points);
   }
 
   updatePoint(point) {
@@ -67,7 +78,9 @@ export default class Provider {
       });
     }
 
-    return Promise.reject(`Не описаны действия в режиме offline`);
+    const offers = this._store.getItem(NameSpace.OFFERS).slice();
+
+    return Promise.resolve(offers);
   }
 
   getDestinations() {
@@ -80,7 +93,29 @@ export default class Provider {
       });
     }
 
-    return Promise.reject(`Не описаны действия в режиме offline`);
+    const destinations = this._store.getItem(NameSpace.DESTINATIONS).slice();
+
+    return Promise.resolve(destinations);
+  }
+
+  sync() {
+    if (Provider.isOnline()) {
+      const storedPoints = this._store.getItem(NameSpace.POINTS);
+
+      return this._api.sync(storedPoints)
+        .then((response) => {
+
+          const createdPoints = response.created;
+          const updatedPoints = response.updated;
+
+          const items = createStructure([...createdPoints, ...updatedPoints]);
+          this._store.setItem(NameSpace.POINTS, items);
+
+          return response;
+        });
+    }
+
+    return Promise.reject(new Error(`Не удалось синхронизировать данные с сервером`));
   }
 
   static isOnline() {
