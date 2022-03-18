@@ -58,9 +58,9 @@ const createDestinationTemplate = (destintation) => {
 
 
 export default class EditDetails extends Abstract {
-  constructor(point, offers) {
+  constructor(destination, offers) {
     super();
-    this._data = point;
+    this._destination = destination;
     this._offers = offers;
   }
 
@@ -72,8 +72,8 @@ export default class EditDetails extends Abstract {
       offersListMarkup = createOffersListTemplate(this._offers);
     }
 
-    if (this._data.description) {
-      destinationMurkup = createDestinationTemplate(this._data.destination);
+    if (this._destination) {
+      destinationMurkup = createDestinationTemplate(this._destination);
     }
 
     return (

@@ -32,20 +32,14 @@ export default class EventEdit extends Smart {
     return `<form class="event event--edit" action="#" method="post"></form>`;
   }
 
+  _getHeader() {
+    this._headerComponent = new HeaderComponent(this._data);
+    this._headerComponent.setDestinationChangeHandler(this._destinationChangeHandler);
 
-  _createElement() {
-    const el = createElement(this._getTemplate());
+    return this._headerComponent;
+  }
 
-    if (this._headerComponent !== null) {
-      remove(this._headerComponent);
-      this._headerComponent = null;
-    }
-
-    if (this._detailsComponent !== null) {
-      remove(this._detailsComponent);
-      this._detailsComponent = null;
-    }
-
+  _getDetails() {
     let offers = [];
     if (this._offers.length < 0) {
       offers = this._offers
@@ -57,11 +51,19 @@ export default class EventEdit extends Smart {
         });
     }
 
-    this._headerComponent = new HeaderComponent(this._data);
-    this._headerComponent.setDestinationChangeHandler(this._destinationChangeHandler);
-    this._detailsComponent = new DetailsComponent(this._data, offers);
-    render(el, this._headerComponent);
-    render(el, this._detailsComponent);
+    this._detailsComponent = new DetailsComponent(this._data.destination, offers);
+
+    return this._detailsComponent;
+  }
+
+
+  _createElement() {
+    const el = createElement(this._getTemplate());
+
+    render(el, [
+      this._getHeader(),
+      this._getDetails()
+    ]);
 
     return el;
   }
