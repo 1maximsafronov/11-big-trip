@@ -42,7 +42,7 @@ const tripEventsElement = pageMainElement.querySelector(`.trip-events`);
 const tripInfoComponent = new TripInfoComponent();
 const tripControlsComponent = new TripControlsComponent();
 const newEventBtnComponent = new NewEventButtonComponent();
-const siteMenuComponent = new SiteMenuComponent();
+const siteMenuComponent = new SiteMenuComponent(`table`);
 const filterComponent = new FilterComponent();
 
 // * Инициализация контроллеров
@@ -50,6 +50,10 @@ const tripController = new TripController(tripEventsElement, pointsModel, offers
 
 newEventBtnComponent.setClickHandler(() => {
   logToConsole(`Создание новой точки`);
+});
+
+siteMenuComponent.setChangeTabHahndler((newTab) => {
+  logToConsole(`Меняем вкладку меню`, newTab);
 });
 
 filterComponent.setFilterChangeHandler((filterType)=> {
