@@ -36,6 +36,26 @@ const createOffersListTemplate = (offers) => {
   );
 };
 
+const createDestinationTemplate = (destintation) => {
+
+  const description = destintation.description;
+
+  const pictures = destintation.pictures;
+
+  return (
+    `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${description}</p>
+
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+        ${pictures.map((picture) => (`<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)).join(`\n`)}
+        </div>
+      </div>
+    </section>`
+  );
+};
+
 
 export default class EditDetails extends Abstract {
   constructor(point, offers) {
@@ -54,6 +74,7 @@ export default class EditDetails extends Abstract {
     return (
       `<section class="event__details">
         ${offersListMarkup}
+        ${createDestinationTemplate(this._data.destination)}
       </section>`
     );
   }
