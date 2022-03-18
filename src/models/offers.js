@@ -1,13 +1,21 @@
+import {extendObject} from "../utils/common";
+
 export default class Offers {
   constructor() {
-    this._offers = [];
+    this._offers = {};
   }
 
   setOffers(offers) {
-    this._offers = offers.slice();
+    this._offers = offers.reduce((acc, item) => {
+      return extendObject(acc, {[item.type]: item.offers});
+    }, {});
   }
 
   getOffers() {
-    return this._offers.slice();
+    return extendObject({}, this._offers);
+  }
+
+  getOffersByType(type) {
+    return this._offers[type] || [];
   }
 }

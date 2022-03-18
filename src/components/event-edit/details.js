@@ -1,10 +1,10 @@
 import Abstract from "../abstract";
-import {createElement, remove, render} from "../../utils/render";
+import {createElement, render} from "../../utils/render";
 
 const createOfferItemTemplate = ({name, title, price, isChecked}) => {
   return (
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden"
+      <input class="event__offer-checkbox visually-hidden"
         type="checkbox"
         id="event-offer-${name}-1"
         name="event-offer-${name}"
@@ -19,68 +19,74 @@ const createOfferItemTemplate = ({name, title, price, isChecked}) => {
   );
 };
 
-const createOffersListTemplate = (offers) => {
-  if (offers <= 0) {
-    return ``;
-  }
-
-  const offersMarkup = offers.map(createOfferItemTemplate).join(`\n`);
-
+const createOffersSTemplate = () => {
   return (
     `<section class="event__section event__section--offers">
-      <h3 class="event__section-title event__section-title--offers">Offers</h3>
-      <div class="event__available-offers">
-        ${offersMarkup}
-      </div>
+      <h3 class="event__section-title event__section-title--offers">
+        Offers
+      </h3>
+      <div class="event__available-offers"></div>
     </section>`
   );
 };
 
-const createDestinationTemplate = (destintation) => {
-
-  const description = destintation.description;
-
-  const pictures = destintation.pictures;
+const createDestinationTemplate = ({description, pictures}) => {
+  const picturesMarkup = pictures.map((pic) => (
+    `<img class="event__photo" src="${pic.src}" alt="${pic.description}">`
+  )).join(`\n`);
 
   return (
-    `<section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    `<section class="event__section event__section--destination">
+      <h3 class="event__section-title event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${description}</p>
-
       <div class="event__photos-container">
-        <div class="event__photos-tape">
-        ${pictures.map((picture) => (`<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)).join(`\n`)}
-        </div>
+        <div class="event__photos-tape">${picturesMarkup}</div>
       </div>
     </section>`
   );
 };
-
 
 export default class EditDetails extends Abstract {
   constructor(destination, offers) {
     super();
+
     this._destination = destination;
     this._offers = offers;
   }
 
+  _getOffersElement() {
+    const el = createElement(createOffersSTemplate());
+    const container = el.querySelector(`.event__available-offers`);
+
+    for (const offer of this._offers) {
+      render(container, createElement(createOfferItemTemplate(offer)));
+    }
+
+    return el;
+  }
+
+  _getDestinationElement() {
+    const templ = createDestinationTemplate(this._destination);
+    const el = createElement(templ);
+
+    return el;
+  }
+
   _getTemplate() {
-    let offersListMarkup = ``;
-    let destinationMurkup = ``;
+    return `<section class="event__details"></section>`;
+  }
+
+  _createElement() {
+    const el = createElement(this._getTemplate());
 
     if (this._offers.length > 0) {
-      offersListMarkup = createOffersListTemplate(this._offers);
+      render(el, this._getOffersElement());
     }
 
     if (this._destination) {
-      destinationMurkup = createDestinationTemplate(this._destination);
+      render(el, this._getDestinationElement());
     }
 
-    return (
-      `<section class="event__details">
-        ${offersListMarkup}
-        ${destinationMurkup}
-      </section>`
-    );
+    return el;
   }
 }

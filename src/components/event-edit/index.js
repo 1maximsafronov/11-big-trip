@@ -1,4 +1,4 @@
-import {createElement, remove, render} from "../../utils/render";
+import {createElement, render} from "../../utils/render";
 import Smart from "../smart";
 import HeaderComponent from "./header";
 import DetailsComponent from "./details";
@@ -8,54 +8,36 @@ import "../../../node_modules/flatpickr/dist/flatpickr.min.css";
 import {extendObject, logToConsole} from "../../utils/common";
 
 export default class EventEdit extends Smart {
-  constructor(event, offers) {
+  constructor(event, offers, destinations) {
     super();
     this._data = event;
     this._offers = offers;
+    this._destinations = destinations;
     this._datepicker = null;
-
-    this._headerComponent = null;
-    this._detailsComponent = null;
 
     this._submitHandler = this._submitHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._destinationChageHandler = this._destinationChageHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._closeBtnClickHandler = this._closeBtnClickHandler.bind(this);
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
-    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
 
     this._setInnerHandlers();
     // this._setDatepicker();
   }
 
-  _getTemplate() {
-    return `<form class="event event--edit" action="#" method="post"></form>`;
-  }
-
   _getHeader() {
-    this._headerComponent = new HeaderComponent(this._data);
-    this._headerComponent.setDestinationChangeHandler(this._destinationChangeHandler);
-
-    return this._headerComponent;
+    const destinations = this._destinations.map((item) => item.name);
+    return new HeaderComponent(this._data, destinations);
   }
 
   _getDetails() {
-    let offers = [];
-    if (this._offers.length < 0) {
-      offers = this._offers
-        .find((item) => item.type === this._data.type).offers
-        .map((offer) => {
-
-          const isChecked = this._data.offers.some((pointOffer) => pointOffer.title === offer.title);
-          return extendObject(offer, {isChecked});
-        });
-    }
-
-    this._detailsComponent = new DetailsComponent(this._data.destination, offers);
-
-    return this._detailsComponent;
+    return new DetailsComponent(this._data.destination, this._getOffers());
   }
 
+  _getTemplate() {
+    return `<form class="event event--edit" action="#" method="post"></form>`;
+  }
 
   _createElement() {
     const el = createElement(this._getTemplate());
@@ -66,6 +48,17 @@ export default class EventEdit extends Smart {
     ]);
 
     return el;
+  }
+
+  _getOffers() {
+    const isOfferChecked = (offer) => {
+      return this._data.offers
+          .some((pointOffer) => offer.title === pointOffer.title);
+    };
+
+    return this._offers[this._data.type].map((offer) => {
+      return extendObject(offer, {isChecked: isOfferChecked(offer)});
+    });
   }
 
   _setDatepicker() {
@@ -97,14 +90,23 @@ export default class EventEdit extends Smart {
   _setInnerHandlers() {
     this.getInnerElement(`.event__type-list`)
       .addEventListener(`change`, this._typeChangeHandler);
+    this.getInnerElement(`.event__input--destination`)
+      .addEventListener(`change`, this._destinationChageHandler);
   }
 
   _typeChangeHandler(evt) {
-    this.updateData({type: evt.target.value});
+    if (evt.target.value !== this._data.type) {
+      this.updateData({type: evt.target.value});
+    }
   }
 
-  _destinationChangeHandler(newDestinationName) {
-    logToConsole(`Изменяем destination`, newDestinationName);
+  _destinationChageHandler(evt) {
+    const newDestinationName = evt.target.value;
+    if (this._data.destination.name !== newDestinationName) {
+      logToConsole(`Изменяем destination`, newDestinationName);
+      const newData = this._destinations.find((item) => item.name === newDestinationName);
+      this.updateData({destination: newData});
+    }
   }
 
   _submitHandler(evt) {

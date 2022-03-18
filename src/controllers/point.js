@@ -11,13 +11,14 @@ const Mode = {
 };
 
 export default class Point {
-  constructor(container, offersModel, changeMode, changeData) {
+  constructor(container, offersModel, destinationsModel, changeMode, changeData) {
     this._container = container;
     this._event = null;
     this._mode = Mode.DEFAULT;
     this._changeMode = changeMode;
     this._changeData = changeData;
     this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
 
     this._eventContainer = null;
     this._eventComponent = null;
@@ -67,8 +68,9 @@ export default class Point {
 
   _renderEventEditForm() {
     const offers = this._offersModel.getOffers();
+    const destinations = this._destinationsModel.getDestinations();
     const prevEventEditComponent = this._eventEditComponent;
-    this._eventEditComponent = new EventEditComponent(this._event, offers);
+    this._eventEditComponent = new EventEditComponent(this._event, offers, destinations);
 
     this._eventEditComponent.setSubmitHandler(this._handleEditFormSubmit);
     this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);

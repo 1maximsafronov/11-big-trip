@@ -46,7 +46,7 @@ const siteMenuComponent = new SiteMenuComponent(`table`);
 const filterComponent = new FilterComponent();
 
 // * Инициализация контроллеров
-const tripController = new TripController(tripEventsElement, pointsModel, offersModel, apiWithProvider);
+const tripController = new TripController(tripEventsElement, apiWithProvider, pointsModel, offersModel, destinationsModel);
 
 newEventBtnComponent.setClickHandler(() => {
   tripController.createNewEvent();

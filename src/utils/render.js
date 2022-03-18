@@ -17,6 +17,10 @@ export const renderTemplate = (container, template, place = RenedrPosition.BEFOR
 };
 
 export const renderComponent = (container, child, place) => {
+  if (child === null) {
+    return;
+  }
+
   if (container instanceof Abstract) {
     container = container.getElement();
   }

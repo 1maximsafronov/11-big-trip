@@ -30,10 +30,11 @@ const sortPoints = (sortType, points) => {
 };
 
 export default class Trip {
-  constructor(container, pointsModel, offersModel, api) {
+  constructor(container, api, pointsModel, offersModel, destinationsModel) {
     this._container = container;
     this._pointsModel = pointsModel;
     this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
     this._api = api;
     this._pointController = {};
     this._currentSortType = SortType.DEFAULT;
@@ -140,7 +141,7 @@ export default class Trip {
 
   _renderPoints(container, points) {
     for (const point of points) {
-      const pointController = new PointController(container, this._offersModel, this._handleModeChange, this._handleViewAction);
+      const pointController = new PointController(container, this._offersModel, this._destinationsModel, this._handleModeChange, this._handleViewAction);
       pointController.init(point);
       this._pointController[point.id] = pointController;
     }
