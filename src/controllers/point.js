@@ -1,5 +1,5 @@
 import {remove, render, replace} from "../utils/render";
-import {extendObject} from "../utils/common";
+import {extendObject, logToConsole} from "../utils/common";
 import {UserAction} from "../const";
 import EventEditComponent from "../components/event-edit";
 import EventComponent from "../components/event";
@@ -121,10 +121,11 @@ export default class Point {
     this._replaceCardToForm();
   }
 
-  _handleEditFormSubmit() {
+  _handleEditFormSubmit(updatedPoint) {
+    logToConsole(`Обновляем данные точки`, updatedPoint);
     this._changeData(
         UserAction.UPDATE_POINT,
-        this._event
+        updatedPoint
     );
   }
 

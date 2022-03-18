@@ -115,8 +115,8 @@ export default class EventEdit extends Smart {
   }
 
   _setInnerHandlers() {
-    this._setEndDatePickr();
-    this._setStartDatepicker();
+    // this._setEndDatePickr();
+    // this._setStartDatepicker();
 
     this.getInnerElement(`.event__type-list`)
       .addEventListener(`change`, this._typeChangeHandler);
@@ -132,23 +132,22 @@ export default class EventEdit extends Smart {
 
   _destinationChageHandler(evt) {
     const newDestinationName = evt.target.value;
-    if (this._data.destination.name !== newDestinationName) {
+    const newData = this._destinations.find((item) => item.name === newDestinationName);
+    if (this._data.destination.name !== newDestinationName && newData) {
       logToConsole(`Изменяем destination`, newDestinationName);
-      const newData = this._destinations.find((item) => item.name === newDestinationName);
+
       this.updateData({destination: newData});
     }
   }
 
 
   _startDateChangeHandler([newDate]) {
-    logToConsole(`Изменение даты начала марштура`, newDate);
     this.updateData({
       dateFrom: new Date(newDate)
     });
   }
 
   _endDateChangeHandler([newDate]) {
-    logToConsole(`Изменение даты окончания марштура`, newDate);
     this.updateData({
       dateTo: new Date(newDate)
     });
@@ -156,7 +155,8 @@ export default class EventEdit extends Smart {
 
   _submitHandler(evt) {
     evt.preventDefault();
-    this._callback.submit();
+
+    this._callback.submit(this._data);
   }
 
   _favoriteClickHandler(evt) {
@@ -176,26 +176,25 @@ export default class EventEdit extends Smart {
 
   setSubmitHandler(cb) {
     this._callback.submit = cb;
-    this.getElement()
-      .addEventListener(`submit`, this._submitHandler);
+    this.getElement().addEventListener(`submit`, this._submitHandler);
   }
 
   setFavoriteClickHandler(cb) {
     this._callback.favoriteClick = cb;
-    this.getInnerElement(`.event__favorite-checkbox`)
-      .addEventListener(`change`, this._favoriteClickHandler);
+    // this.getInnerElement(`.event__favorite-checkbox`)
+    //   .addEventListener(`change`, this._favoriteClickHandler);
   }
 
   setCloseBtnClickHandler(cb) {
     this._callback.closeBtnClick = cb;
-    this.getInnerElement(`.event__rollup-btn`)
-      .addEventListener(`click`, this._closeBtnClickHandler);
+    // this.getInnerElement(`.event__rollup-btn`)
+    //   .addEventListener(`click`, this._closeBtnClickHandler);
   }
 
   setDeleteClickHandler(cb) {
     this._callback.deleteClick = cb;
-    this.getInnerElement(`.event__reset-btn`)
-      .addEventListener(`click`, this._deleteClickHandler);
+    // this.getInnerElement(`.event__reset-btn`)
+    //   .addEventListener(`click`, this._deleteClickHandler);
   }
 
   reset(point) {

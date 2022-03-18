@@ -1,7 +1,10 @@
 import Abstract from "../abstract";
 import {createElement, render} from "../../utils/render";
+import {nanoid} from "nanoid";
 
-const createOfferItemTemplate = ({name, title, price, isChecked}) => {
+const createOfferItemTemplate = ({title, price, isChecked}) => {
+
+  const name = nanoid();
   return (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox visually-hidden"
