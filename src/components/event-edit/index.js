@@ -5,7 +5,7 @@ import DetailsComponent from "./details";
 
 import flatpickr from "flatpickr";
 import "../../../node_modules/flatpickr/dist/flatpickr.min.css";
-import {extendObject} from "../../utils/common";
+import {extendObject, logToConsole} from "../../utils/common";
 
 export default class EventEdit extends Smart {
   constructor(event, offers) {
@@ -22,6 +22,7 @@ export default class EventEdit extends Smart {
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._closeBtnClickHandler = this._closeBtnClickHandler.bind(this);
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
+    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
 
     this._setInnerHandlers();
     // this._setDatepicker();
@@ -54,6 +55,7 @@ export default class EventEdit extends Smart {
         });
 
     this._headerComponent = new HeaderComponent(this._data);
+    this._headerComponent.setDestinationChangeHandler(this._destinationChangeHandler);
     this._detailsComponent = new DetailsComponent(this._data, offers);
     render(el, this._headerComponent);
     render(el, this._detailsComponent);
@@ -94,6 +96,10 @@ export default class EventEdit extends Smart {
 
   _typeChangeHandler(evt) {
     this.updateData({type: evt.target.value});
+  }
+
+  _destinationChangeHandler(newDestinationName) {
+    logToConsole(`Изменяем destination`, newDestinationName);
   }
 
   _submitHandler(evt) {

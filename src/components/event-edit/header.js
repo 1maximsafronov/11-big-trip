@@ -155,9 +155,23 @@ export default class EventEditHeader extends Abstract {
   constructor(event) {
     super();
     this._event = event;
+
+    this._destinationChageHandler = this._destinationChageHandler.bind(this);
   }
 
   _getTemplate() {
     return createTemplate(this._event);
+  }
+
+  _destinationChageHandler(evt) {
+    evt.preventDefault();
+    this._callback.changeDestination(evt.target.value);
+  }
+
+  setDestinationChangeHandler(cb) {
+    this._callback.changeDestination = cb;
+
+    this.getInnerElement(`.event__input--destination`)
+      .addEventListener(`change`, this._destinationChageHandler);
   }
 }
