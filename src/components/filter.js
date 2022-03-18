@@ -40,7 +40,26 @@ const createTemplate = () => {
 };
 
 export default class Filter extends Abstract {
+  constructor() {
+    super();
+
+    this._filterChangeHandler = this._filterChangeHandler.bind(this);
+  }
+
   _getTemplate() {
     return createTemplate();
+  }
+
+  _filterChangeHandler(evt) {
+    if (evt.target.tagName === `INPUT`) {
+      evt.preventDefault();
+      this._callback.changeFilter(evt.target.value);
+    }
+  }
+
+  setFilterChangeHandler(cb) {
+    this._callback.changeFilter = cb;
+
+    this.getElement().addEventListener(`change`, this._filterChangeHandler);
   }
 }

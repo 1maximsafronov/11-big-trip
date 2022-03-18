@@ -52,6 +52,10 @@ newEventBtnComponent.setClickHandler(() => {
   logToConsole(`Создание новой точки`);
 });
 
+filterComponent.setFilterChangeHandler((filterType)=> {
+  logToConsole(`Меняем фильтр`, filterType);
+});
+
 
 // * Рендеринг компоннетов
 render(tripMainElement, [
