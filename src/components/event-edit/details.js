@@ -2,8 +2,12 @@ import Abstract from "../abstract";
 import {createElement, render} from "../../utils/render";
 import {nanoid} from "nanoid";
 
-const createOfferItemTemplate = ({title, price, isChecked}) => {
+// !Небольшой фикс для url картинок
+const fixPicUrl = (url) => {
+  return url.replace(`http`, `https`);
+};
 
+const createOfferItemTemplate = ({title, price, isChecked}) => {
   const name = nanoid();
   return (
     `<div class="event__offer-selector">
@@ -34,8 +38,10 @@ const createOffersSTemplate = () => {
 };
 
 const createDestinationTemplate = ({description, pictures}) => {
+  // !Небольшой фикс для url картинок
+  // TODO: убрать фикс, если понадобится
   const picturesMarkup = pictures.map((pic) => (
-    `<img class="event__photo" src="${pic.src}" alt="${pic.description}">`
+    `<img class="event__photo" src="${fixPicUrl(pic.src)}" alt="${pic.description}">`
   )).join(`\n`);
 
   return (
