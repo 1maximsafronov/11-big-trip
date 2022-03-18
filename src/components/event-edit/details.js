@@ -66,15 +66,20 @@ export default class EditDetails extends Abstract {
 
   _getTemplate() {
     let offersListMarkup = ``;
+    let destinationMurkup = ``;
 
     if (this._offers.length > 0) {
       offersListMarkup = createOffersListTemplate(this._offers);
     }
 
+    if (this._data.description) {
+      destinationMurkup = createDestinationTemplate(this._data.destination);
+    }
+
     return (
       `<section class="event__details">
         ${offersListMarkup}
-        ${createDestinationTemplate(this._data.destination)}
+        ${destinationMurkup}
       </section>`
     );
   }

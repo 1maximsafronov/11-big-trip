@@ -49,7 +49,7 @@ const filterComponent = new FilterComponent();
 const tripController = new TripController(tripEventsElement, pointsModel, offersModel, apiWithProvider);
 
 newEventBtnComponent.setClickHandler(() => {
-  logToConsole(`Создание новой точки`);
+  tripController.createNewEvent();
 });
 
 siteMenuComponent.setChangeTabHahndler((newTab) => {

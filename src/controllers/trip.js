@@ -1,6 +1,7 @@
 import moment from "moment";
 import SortComponent from "../components/sort";
 import PointController from "./point";
+import NewPointController from "./new-point";
 import LoadingComponent from "../components/loading";
 import NoPointsComponent from "../components/no-points";
 import TripDayItemComponent from "../components/trip-day-item";
@@ -45,6 +46,8 @@ export default class Trip {
     this._handleSortChange = this._handleSortChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
+
+    this._newPointController = new NewPointController(this._container, this._handleViewAction);
   }
 
   init(status) {
@@ -64,6 +67,21 @@ export default class Trip {
 
     this._renderSort();
     this._renderTripDays();
+  }
+
+  createNewEvent() {
+    logToConsole(`Создание новой точки`);
+    this._currentSortType = SortType.DEFAULT;
+    remove(this._sortComponent);
+    this._sortComponent = null;
+    this._clearPointsList();
+    this._renderSort();
+    this._renderNewPoint();
+    this._renderTripDays();
+  }
+
+  _renderNewPoint() {
+    this._newPointController.init();
   }
 
   // * done!

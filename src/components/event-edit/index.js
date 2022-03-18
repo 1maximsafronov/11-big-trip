@@ -46,13 +46,16 @@ export default class EventEdit extends Smart {
       this._detailsComponent = null;
     }
 
-    const offers = this._offers
+    let offers = [];
+    if (this._offers.length < 0) {
+      offers = this._offers
         .find((item) => item.type === this._data.type).offers
         .map((offer) => {
 
           const isChecked = this._data.offers.some((pointOffer) => pointOffer.title === offer.title);
           return extendObject(offer, {isChecked});
         });
+    }
 
     this._headerComponent = new HeaderComponent(this._data);
     this._headerComponent.setDestinationChangeHandler(this._destinationChangeHandler);
