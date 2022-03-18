@@ -10,6 +10,12 @@ const Mode = {
   EDIT: `edit`,
 };
 
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABOARDING: `ABOARDING`,
+};
+
 export default class Point {
   constructor(container, offersModel, destinationsModel, changeMode, changeData) {
     this._container = container;
@@ -102,6 +108,35 @@ export default class Point {
     if (this._mode === Mode.EDIT) {
       this._eventEditComponent.reset(this._event);
       this._replaceFormToCard();
+    }
+  }
+
+  setViewState(state) {
+    const resetFormState = () => {
+      this._eventEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._eventEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this._eventEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+      case State.ABOARDING:
+        this._eventEditComponent.shake(resetFormState);
+        this._eventComponent.shake(resetFormState);
+        break;
     }
   }
 

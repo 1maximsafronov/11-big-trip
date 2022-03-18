@@ -10,7 +10,11 @@ import {extendObject, logToConsole} from "../../utils/common";
 export default class EventEdit extends Smart {
   constructor(event, offers, destinations) {
     super();
-    this._data = event;
+    this._data = extendObject(event, {
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false
+    });
     this._offers = offers;
     this._destinations = destinations;
     this._startDatepickr = null;
@@ -40,7 +44,8 @@ export default class EventEdit extends Smart {
   }
 
   _getTemplate() {
-    return `<form class="event event--edit" action="#" method="post"></form>`;
+    return `<form class="event event--edit" action="#" method="post"
+      ${this._data.isDisabled ? `disabled` : ``}></form>`;
   }
 
   _createElement() {
@@ -163,7 +168,11 @@ export default class EventEdit extends Smart {
 
   _submitHandler(evt) {
     evt.preventDefault();
-    this._callback.submit(this._data);
+    const newData = extendObject({}, this._data);
+    delete newData.isDisabled;
+    delete newData.isSaving;
+    delete newData.isDeleting;
+    this._callback.submit(newData);
   }
 
   _favoriteClickHandler(evt) {

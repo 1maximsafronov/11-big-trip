@@ -1,6 +1,6 @@
 import moment from "moment";
 import SortComponent from "../components/sort";
-import PointController from "./point";
+import PointController, {State as PointViewState} from "./point";
 import NewPointController from "./new-point";
 import LoadingComponent from "../components/loading";
 import NoPointsComponent from "../components/no-points";
@@ -202,6 +202,7 @@ export default class Trip {
   _handleViewAction(userAction, payload) {
     switch (userAction) {
       case UserAction.UPDATE_POINT:
+        this._pointController[payload.id].setViewState(PointViewState.SAVING);
         this._api.updatePoint(payload)
         .then((point) => {
           logToConsole(`Обновили точку`, point);
@@ -214,6 +215,7 @@ export default class Trip {
         logToConsole(`Пытаемся добавить точку маршрута`, payload);
         break;
       case UserAction.DELETE_POINT:
+        this._pointController[payload.id].setViewState(PointViewState.DELETING);
         this._api.deletePoint(payload)
           .then(() => {
             this._pointsModel.deletePoint(payload);

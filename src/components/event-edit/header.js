@@ -94,7 +94,19 @@ const createTypeGroupTemplate = (eventId, type) => {
 };
 
 const createTemplate = (event, destinations) => {
-  const {id: eventId, isFavorite, type, destination, dateFrom, dateTo, basePrice} = event;
+  const {
+    id: eventId,
+    isFavorite,
+    type,
+    destination,
+    dateFrom,
+    dateTo,
+    basePrice,
+    isDisabled,
+    isSaving,
+    isDeleting
+
+  } = event;
   const placeholder = getEventTypePlaceholder(type);
   const startTime = moment(dateFrom).format(`DD/MM/YY HH:mm`);
   const endTime = moment(dateTo).format(`DD/MM/YY HH:mm`);
@@ -134,8 +146,16 @@ const createTemplate = (event, destinations) => {
         <input class="event__input  event__input--price" id="event-price-${eventId}" type="text" name="event-price" value="${basePrice}">
       </div>
 
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Delete</button>
+      <button class="event__save-btn  btn  btn--blue" type="submit"
+        ${isDisabled ? `disabled` : ``}
+      >
+        ${isSaving ? `Saving...` : `Save`}
+      </button>
+      <button class="event__reset-btn" type="reset"
+        ${isDisabled ? `disabled` : ``}
+      >
+        ${isDeleting ? `Deleting...` : `Delete`}
+      </button>
 
       <input class="event__favorite-checkbox visually-hidden"
         id="event-favorite-${eventId}"
