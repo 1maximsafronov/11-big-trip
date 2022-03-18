@@ -22,6 +22,7 @@ export default class EventEdit extends Smart {
     this._closeBtnClickHandler = this._closeBtnClickHandler.bind(this);
 
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._priceInputHanlder = this._priceInputHanlder.bind(this);
     this._destinationChageHandler = this._destinationChageHandler.bind(this);
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
@@ -81,7 +82,7 @@ export default class EventEdit extends Smart {
           "defaultDate": this._data.dateFrom,
           "maxDate": this._data.dateTo,
           "onChange": this._startDateChangeHandler,
-          "static": true
+          // "static": true
         }
     );
   }
@@ -101,7 +102,7 @@ export default class EventEdit extends Smart {
           "defaultDate": this._data.dateTo,
           "minDate": this._data.dateFrom,
           "onChange": this._endDateChangeHandler,
-          "static": true
+          // "static": true
         }
     );
   }
@@ -115,13 +116,15 @@ export default class EventEdit extends Smart {
   }
 
   _setInnerHandlers() {
-    // this._setEndDatePickr();
-    // this._setStartDatepicker();
+    this._setEndDatePickr();
+    this._setStartDatepicker();
 
     this.getInnerElement(`.event__type-list`)
       .addEventListener(`change`, this._typeChangeHandler);
     this.getInnerElement(`.event__input--destination`)
       .addEventListener(`change`, this._destinationChageHandler);
+    this.getInnerElement(`.event__input--price`)
+        .addEventListener(`input`, this._priceInputHanlder);
   }
 
   _typeChangeHandler(evt) {
@@ -140,22 +143,26 @@ export default class EventEdit extends Smart {
     }
   }
 
+  _priceInputHanlder(evt) {
+    this.updateData({
+      basePrice: Number(evt.target.value)
+    }, true);
+  }
 
   _startDateChangeHandler([newDate]) {
     this.updateData({
       dateFrom: new Date(newDate)
-    });
+    }, true);
   }
 
   _endDateChangeHandler([newDate]) {
     this.updateData({
       dateTo: new Date(newDate)
-    });
+    }, true);
   }
 
   _submitHandler(evt) {
     evt.preventDefault();
-
     this._callback.submit(this._data);
   }
 
@@ -181,23 +188,36 @@ export default class EventEdit extends Smart {
 
   setFavoriteClickHandler(cb) {
     this._callback.favoriteClick = cb;
-    // this.getInnerElement(`.event__favorite-checkbox`)
-    //   .addEventListener(`change`, this._favoriteClickHandler);
+    this.getInnerElement(`.event__favorite-checkbox`)
+      .addEventListener(`change`, this._favoriteClickHandler);
   }
 
   setCloseBtnClickHandler(cb) {
     this._callback.closeBtnClick = cb;
-    // this.getInnerElement(`.event__rollup-btn`)
-    //   .addEventListener(`click`, this._closeBtnClickHandler);
+    this.getInnerElement(`.event__rollup-btn`)
+      .addEventListener(`click`, this._closeBtnClickHandler);
   }
 
   setDeleteClickHandler(cb) {
     this._callback.deleteClick = cb;
-    // this.getInnerElement(`.event__reset-btn`)
-    //   .addEventListener(`click`, this._deleteClickHandler);
+    this.getInnerElement(`.event__reset-btn`)
+      .addEventListener(`click`, this._deleteClickHandler);
   }
 
   reset(point) {
     this.updateData(point);
+  }
+
+  destroyFlatpickr() {
+    if (this._endDatepickr !== null) {
+      this._endDatepickr.destroy();
+      this._endDatepickr = null;
+    }
+
+    if (this._startDatepickr !== null) {
+      this._startDatepickr.destroy();
+      this._startDatepickr = null;
+    }
+
   }
 }

@@ -92,6 +92,7 @@ export default class Point {
   }
 
   destroy() {
+    this._eventEditComponent.destroyFlatpickr();
     remove(this._eventContainer);
     remove(this._eventComponent);
     remove(this._eventEditComponent);
