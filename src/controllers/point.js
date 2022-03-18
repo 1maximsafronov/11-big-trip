@@ -124,8 +124,6 @@ export default class Point {
         UserAction.UPDATE_POINT,
         this._event
     );
-
-    this._replaceFormToCard();
   }
 
   _handleFavoriteClick() {

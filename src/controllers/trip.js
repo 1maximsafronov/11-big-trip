@@ -185,7 +185,9 @@ export default class Trip {
       case UserAction.UPDATE_POINT:
         this._api.updatePoint(payload)
         .then((point) => {
+          logToConsole(`Обновили точку`, point);
           this._pointsModel.updatePoint(null, point);
+          this._pointController[point.id].resetView();
           this._pointController[point.id].init(point);
         });
         break;
