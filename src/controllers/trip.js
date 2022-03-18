@@ -66,17 +66,17 @@ export default class Trip {
     this._renderTripDays();
   }
 
-  // done!
+  // * done!
   _renderNoPoints() {
     render(this._container, this._noPointsComponent);
   }
 
-  // done!
+  // * done!
   _renderLoading() {
     render(this._container, this._loadingComponent);
   }
 
-  // done
+  // * done
   _renderSort() {
     const prevSortComponent = this._sortComponent;
 
@@ -186,7 +186,7 @@ export default class Trip {
         this._api.updatePoint(payload)
         .then((point) => {
           logToConsole(`Обновили точку`, point);
-          this._pointsModel.updatePoint(null, point);
+          this._pointsModel.updatePoint(point);
           this._pointController[point.id].resetView();
           this._pointController[point.id].init(point);
         });
@@ -195,10 +195,6 @@ export default class Trip {
         logToConsole(`Пытаемся добавить точку маршрута`, payload);
         break;
       case UserAction.DELETE_POINT:
-        // делаем запрос удаления
-        // удаляем току из модели
-        // удаляем созданный контроллер точки
-        // перерисовываем весь список
         this._api.deletePoint(payload)
           .then(() => {
             this._pointsModel.deletePoint(payload);

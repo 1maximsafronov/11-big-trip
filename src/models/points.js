@@ -15,7 +15,7 @@ export default class Point extends Observer {
     return Object.values(this._points).slice();
   }
 
-  updatePoint(action, point) {
+  updatePoint(point) {
     if (!(point.id in this._points)) {
       throw new Error(`Невозмонжно ОБНОВИТЬ токчку которой не существует`);
     }
