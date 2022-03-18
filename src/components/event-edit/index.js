@@ -152,13 +152,13 @@ export default class EventEdit extends Smart {
   _startDateChangeHandler([newDate]) {
     this.updateData({
       dateFrom: new Date(newDate)
-    }, true);
+    }, false);
   }
 
   _endDateChangeHandler([newDate]) {
     this.updateData({
       dateTo: new Date(newDate)
-    }, true);
+    }, false);
   }
 
   _submitHandler(evt) {
