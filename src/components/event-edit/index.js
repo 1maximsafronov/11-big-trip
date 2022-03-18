@@ -13,17 +13,20 @@ export default class EventEdit extends Smart {
     this._data = event;
     this._offers = offers;
     this._destinations = destinations;
-    this._datepicker = null;
+    this._startDatepickr = null;
+    this._endDatepickr = null;
 
     this._submitHandler = this._submitHandler.bind(this);
-    this._typeChangeHandler = this._typeChangeHandler.bind(this);
-    this._destinationChageHandler = this._destinationChageHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._closeBtnClickHandler = this._closeBtnClickHandler.bind(this);
-    this._deleteClickHandler = this._deleteClickHandler.bind(this);
+
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._destinationChageHandler = this._destinationChageHandler.bind(this);
+    this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
+    this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
 
     this._setInnerHandlers();
-    // this._setDatepicker();
   }
 
   _getHeader() {
@@ -61,33 +64,60 @@ export default class EventEdit extends Smart {
     });
   }
 
-  _setDatepicker() {
-    if (this._datepicker !== null) {
-      this._datepicker.destroy();
-      this._datepicker = null;
+  _setStartDatepicker() {
+    if (this._startDatepickr !== null) {
+      this._startDatepickr.destroy();
+      this._startDatepickr = null;
     }
 
-    this._datepicker = flatpickr(
-        this.getInnerElement(`input[name="event-start-time"]`),
+    const dateStartElement = this.getInnerElement(`input[name="event-start-time"]`);
+
+    this._startDatepickr = flatpickr(
+        dateStartElement,
         {
-          enableTime: true,
-          dateFormat: `d/m/y H:i`,
-          defaultDate: this._data.dateFrom,
-          onChange: () => {}
+          "enableTime": true,
+          "time_24hr": true,
+          "dateFormat": `d/m/y H:i`,
+          "defaultDate": this._data.dateFrom,
+          "maxDate": this._data.dateTo,
+          "onChange": this._startDateChangeHandler,
+          "static": true
+        }
+    );
+  }
+
+  _setEndDatePickr() {
+    if (this._endDatepickr !== null) {
+      this._endDatepickr.destroy();
+      this._endDatepickr = null;
+    }
+
+    this._endDatepickr = flatpickr(
+        this.getInnerElement(`input[name="event-end-time"]`),
+        {
+          "enableTime": true,
+          "time_24hr": true,
+          "dateFormat": `d/m/y H:i`,
+          "defaultDate": this._data.dateTo,
+          "minDate": this._data.dateFrom,
+          "onChange": this._endDateChangeHandler,
+          "static": true
         }
     );
   }
 
   restoreHandlers() {
-    // this._setDatepicker();
     this._setInnerHandlers();
     this.setSubmitHandler(this._callback.submit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setCloseBtnClickHandler(this._callback.closeBtnClick);
-    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _setInnerHandlers() {
+    this._setEndDatePickr();
+    this._setStartDatepicker();
+
     this.getInnerElement(`.event__type-list`)
       .addEventListener(`change`, this._typeChangeHandler);
     this.getInnerElement(`.event__input--destination`)
@@ -107,6 +137,21 @@ export default class EventEdit extends Smart {
       const newData = this._destinations.find((item) => item.name === newDestinationName);
       this.updateData({destination: newData});
     }
+  }
+
+
+  _startDateChangeHandler([newDate]) {
+    logToConsole(`Изменение даты начала марштура`, newDate);
+    this.updateData({
+      dateFrom: new Date(newDate)
+    });
+  }
+
+  _endDateChangeHandler([newDate]) {
+    logToConsole(`Изменение даты окончания марштура`, newDate);
+    this.updateData({
+      dateTo: new Date(newDate)
+    });
   }
 
   _submitHandler(evt) {
