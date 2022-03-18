@@ -15,6 +15,7 @@ import TripInfoComponent from "./components/trip-info";
 import FilterComponent from "./components/filter";
 
 import TripController from "./controllers/trip";
+import {logToConsole} from "./utils/common";
 
 const END_POINT = `https://15.ecmascript.pages.academy/big-trip`;
 const AUTH_TOKEN = `Basic 5oDAQcFxqGT1ZpU`;
@@ -46,6 +47,11 @@ const filterComponent = new FilterComponent();
 
 // * Инициализация контроллеров
 const tripController = new TripController(tripEventsElement, pointsModel, offersModel, apiWithProvider);
+
+newEventBtnComponent.setClickHandler(() => {
+  logToConsole(`Создание новой точки`);
+});
+
 
 // * Рендеринг компоннетов
 render(tripMainElement, [
