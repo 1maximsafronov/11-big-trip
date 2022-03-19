@@ -25,6 +25,8 @@ export default class Point extends Observer {
     const newPoint = extendObject(this._points[point.id], point);
 
     this._points[point.id] = newPoint;
+
+    this._notify(`some-event`, this.getPoints());
   }
 
   deletePoint(point) {
@@ -33,6 +35,8 @@ export default class Point extends Observer {
     }
 
     delete this._points[point.id];
+
+    this._notify(`some-event`, this.getPoints());
   }
 
   static adaptToClient(data) {
