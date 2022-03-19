@@ -7,6 +7,7 @@ import Provider from "./api/provider";
 import PointsModel from "./models/points";
 import OffersModel from "./models/offers";
 import DestinationsModel from "./models/destinations";
+import FilterModel from "./models/filter";
 
 import NewEventButtonComponent from "./components/new-event-button";
 import TripControlsComponent from "./components/trip-controls";
@@ -32,6 +33,7 @@ const apiWithProvider = new Provider(api, store);
 const pointsModel = new PointsModel();
 const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
+const filterModel = new FilterModel();
 
 const pageBodyElement = document.querySelector(`.page-body`);
 const pageMainElement = pageBodyElement.querySelector(`.page-main`);
@@ -45,8 +47,8 @@ const siteMenuComponent = new SiteMenuComponent(`table`);
 
 // * Инициализация контроллеров
 const tripInfoController = new TripInfroController(tripMainElement, pointsModel);
-const filterController = new FilterController(tripControlsComponent);
-const tripController = new TripController(tripEventsElement, apiWithProvider, pointsModel, offersModel, destinationsModel);
+const filterController = new FilterController(tripControlsComponent, filterModel);
+const tripController = new TripController(tripEventsElement, apiWithProvider, pointsModel, offersModel, destinationsModel, filterModel);
 
 newEventBtnComponent.setClickHandler(() => {
   tripController.createNewEvent();
