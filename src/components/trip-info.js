@@ -1,62 +1,44 @@
-import Abstract from "./abstract";
-import {createElement, render} from "../utils/render";
+import Smart from "./smart";
+import moment from "moment";
 
-export default class TripInfo extends Abstract {
+export default class TripInfo extends Smart {
   constructor() {
     super();
 
-    this._tripInfo = {};
-  }
-
-  _getInfoTitle() {
-    const el = createElement(
-        `<h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>`
-    );
-
-    return el;
-  }
-
-  _getInfoDates() {
-    const el = createElement(
-        `<p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>`
-    );
-
-    return el;
-  }
-
-  _getInfoMain() {
-    const el = createElement(`<div class="trip-info__main"></div>`);
-
-    render(el, [
-      this._getInfoTitle(),
-      this._getInfoDates(),
-    ]);
-
-    return el;
-  }
-
-  _getInfoCost() {
-    const el = createElement(
-        `<p class="trip-info__cost">
-          Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
-        </p>`
-    );
-
-    return el;
+    this._data = {
+      cities: [`Amsterdam`, `Chamonix`, `Geneva`],
+      dateFrom: moment(`2022-03-18`),
+      dateTo: moment(`2022-03-20`),
+      totalCost: 1230
+    };
   }
 
   _getTemplate() {
-    return `<section class="trip-main__trip-info  trip-info"></section>`;
-  }
+    const title = this._data.cities.join(` &mdash; `);
+    const cost = this._data.totalCost;
 
-  _createElement() {
-    const el = createElement(this._getTemplate());
+    let startDate = moment(this._data.dateFrom).format(`MMM DD`);
+    let endDate = moment(this._data.dateTo).format(`MMM DD`);
 
-    render(el, [
-      this._getInfoMain(),
-      this._getInfoCost(),
-    ]);
+    const isSameMonth = moment(this._data.dateFrom)
+      .isSame(this._data.dateTo, `month`);
 
-    return el;
+    if (isSameMonth) {
+      endDate = moment(this._data.dateTo).format(`DD`);
+    }
+
+    let dates = `${startDate}&nbsp;&mdash;&nbsp;${endDate}`;
+
+    return (
+      `<section class="trip-main__trip-info  trip-info">
+        <div class="trip-info__main">
+          <h1 class="trip-info__title">${title}</h1>
+          <p class="trip-info__dates">${dates}</p>
+        </div>
+        <p class="trip-info__cost">
+          Total: &euro;&nbsp;<span class="trip-info__cost-value">${cost}</span>
+        </p>
+      </section>`
+    );
   }
 }
