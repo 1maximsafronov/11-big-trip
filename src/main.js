@@ -11,9 +11,9 @@ import DestinationsModel from "./models/destinations";
 import NewEventButtonComponent from "./components/new-event-button";
 import TripControlsComponent from "./components/trip-controls";
 import SiteMenuComponent from "./components/site-menu";
-import TripInfoComponent from "./components/trip-info";
 import FilterComponent from "./components/filter";
 
+import TripInfroController from "./controllers/trip-info";
 import TripController from "./controllers/trip";
 import {logToConsole} from "./utils/common";
 
@@ -39,13 +39,13 @@ const tripMainElement = pageBodyElement.querySelector(`.trip-main`);
 const tripEventsElement = pageMainElement.querySelector(`.trip-events`);
 
 // * Инициализация компонентов
-const tripInfoComponent = new TripInfoComponent();
 const tripControlsComponent = new TripControlsComponent();
 const newEventBtnComponent = new NewEventButtonComponent();
 const siteMenuComponent = new SiteMenuComponent(`table`);
 const filterComponent = new FilterComponent();
 
 // * Инициализация контроллеров
+const tripInfoController = new TripInfroController(tripMainElement, pointsModel);
 const tripController = new TripController(tripEventsElement, apiWithProvider, pointsModel, offersModel, destinationsModel);
 
 newEventBtnComponent.setClickHandler(() => {
@@ -60,10 +60,9 @@ filterComponent.setFilterChangeHandler((filterType)=> {
   logToConsole(`Меняем фильтр`, filterType);
 });
 
-
+tripInfoController.init();
 // * Рендеринг компоннетов
 render(tripMainElement, [
-  tripInfoComponent,
   tripControlsComponent,
   newEventBtnComponent
 ]);
