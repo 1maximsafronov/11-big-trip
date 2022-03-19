@@ -1,7 +1,7 @@
 import Abstract from "./abstract";
 import {FilterType} from "../const";
 
-const createTemplate = () => {
+const createTemplate = (currentFilter) => {
   return (
     `<form class="trip-filters" action="#" method="get">
         <div class="trip-filters__filter">
@@ -10,6 +10,7 @@ const createTemplate = () => {
             id="filter-everything"
             name="trip-filter"
             value="${FilterType.EVERYTHING}"
+            ${currentFilter === FilterType.EVERYTHING ? `checked` : ``}
             checked
           >
           <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
@@ -21,6 +22,7 @@ const createTemplate = () => {
             id="filter-future"
             name="trip-filter"
             value="${FilterType.FUTURE}"
+            ${currentFilter === FilterType.FUTURE ? `checked` : ``}
           >
           <label class="trip-filters__filter-label" for="filter-future">Future</label>
         </div>
@@ -31,6 +33,7 @@ const createTemplate = () => {
             id="filter-past"
             name="trip-filter"
             value="${FilterType.PAST}"
+            ${currentFilter === FilterType.PAST ? `checked` : ``}
           >
           <label class="trip-filters__filter-label" for="filter-past">Past</label>
         </div>
@@ -41,14 +44,16 @@ const createTemplate = () => {
 };
 
 export default class Filter extends Abstract {
-  constructor() {
+  constructor(currentFilter) {
     super();
+
+    this._currentFilter = currentFilter;
 
     this._filterChangeHandler = this._filterChangeHandler.bind(this);
   }
 
   _getTemplate() {
-    return createTemplate();
+    return createTemplate(this._currentFilter);
   }
 
   _filterChangeHandler(evt) {
