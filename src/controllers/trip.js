@@ -7,7 +7,7 @@ import NoPointsComponent from "../components/no-points";
 import TripDayItemComponent from "../components/trip-day-item";
 import TripDaysListComponent from "../components/trip-days";
 import {render, remove, replace} from "../utils/render";
-import {SortType, UserAction, UpdateType} from "../const";
+import {SortType, FilterType, UserAction, UpdateType} from "../const";
 import {logToConsole} from "../utils/common";
 
 const sortPoints = (sortType, points) => {
@@ -29,11 +29,27 @@ const sortPoints = (sortType, points) => {
   return points;
 };
 
+const filterPoints = (filterType, points) => {
+  const dateNow = new Date();
+
+  switch (filterType) {
+    case FilterType.EVERYTHING:
+      return points;
+    case FilterType.FUTURE:
+      return points.filter((point) => point.dateFrom > dateNow);
+    case FilterType.PAST:
+      return points.filter((point) => point.dateTo < dateNow);
+  }
+
+  return points;
+};
+
 export default class Trip {
-  constructor(container, api, pointsModel, offersModel, destinationsModel) {
+  constructor(container, api, pointsModel, offersModel, destinationsModel, filterModel) {
     this._container = container;
     this._pointsModel = pointsModel;
     this._offersModel = offersModel;
+    this._filterModel = filterModel;
     this._destinationsModel = destinationsModel;
     this._api = api;
     this._pointController = {};
@@ -51,6 +67,7 @@ export default class Trip {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelsEvent = this._handleModelsEvent.bind(this);
     this._pointsModel.addObserver(this._handleModelsEvent);
+    this._filterModel.addObserver(this._handleModelsEvent);
 
     this._newPointController = new NewPointController(this._container, this._offersModel, this._destinationsModel, this._handleViewAction);
   }
@@ -163,8 +180,11 @@ export default class Trip {
 
   _getPoints() {
     const points = this._pointsModel.getPoints();
+    const currentFilterType = this._filterModel.getFilterType();
     const sortedPoints = sortPoints(this._currentSortType, points);
-    return sortedPoints;
+    const filteredPoints = filterPoints(currentFilterType, sortedPoints);
+
+    return filteredPoints;
   }
 
   _getPointsByDays() {
@@ -232,6 +252,10 @@ export default class Trip {
         this._pointController[payload.id].init(payload);
         break;
       case UpdateType.MAJOR_POINT_UPDATE:
+        this._clearPointsList();
+        this._renderTripDays();
+        break;
+      case UpdateType.FILTER_CHANGE:
         this._clearPointsList();
         this._renderTripDays();
         break;
