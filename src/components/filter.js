@@ -1,4 +1,5 @@
 import Abstract from "./abstract";
+import {FilterType} from "../const";
 
 const createTemplate = () => {
   return (
@@ -8,7 +9,7 @@ const createTemplate = () => {
             type="radio"
             id="filter-everything"
             name="trip-filter"
-            value="everything"
+            value="${FilterType.EVERYTHING}"
             checked
           >
           <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
@@ -19,7 +20,7 @@ const createTemplate = () => {
             type="radio"
             id="filter-future"
             name="trip-filter"
-            value="future"
+            value="${FilterType.FUTURE}"
           >
           <label class="trip-filters__filter-label" for="filter-future">Future</label>
         </div>
@@ -29,7 +30,7 @@ const createTemplate = () => {
             type="radio"
             id="filter-past"
             name="trip-filter"
-            value="past"
+            value="${FilterType.PAST}"
           >
           <label class="trip-filters__filter-label" for="filter-past">Past</label>
         </div>

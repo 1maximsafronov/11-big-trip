@@ -25,3 +25,10 @@ export const UpdateType = {
   MAJOR_POINT_UPDATE: `MAJOR_POINT_UPDATE`,
   INIT: `INIT`,
 };
+
+
+export const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};
