@@ -1,33 +1,24 @@
-import Smart from "./smart";
+import Abstract from "./abstract";
 import moment from "moment";
 
-export default class TripInfo extends Smart {
-  constructor() {
+export default class TripInfo extends Abstract {
+  constructor(tripInfo) {
     super();
 
-    this._data = {
-      cities: [`Amsterdam`, `Chamonix`, `Geneva`],
-      dateFrom: moment(`2022-03-18`),
-      dateTo: moment(`2022-03-20`),
-      totalCost: 1230
-    };
+    this._data = tripInfo;
   }
 
   _getTemplate() {
-    const title = this._data.cities.join(` &mdash; `);
-    const cost = this._data.totalCost;
+    let cities = this._data.cities;
 
-    let startDate = moment(this._data.dateFrom).format(`MMM DD`);
-    let endDate = moment(this._data.dateTo).format(`MMM DD`);
-
-    const isSameMonth = moment(this._data.dateFrom)
-      .isSame(this._data.dateTo, `month`);
-
-    if (isSameMonth) {
-      endDate = moment(this._data.dateTo).format(`DD`);
+    if (cities.length > 3) {
+      cities = [cities[0], `...`, cities[cities.length - 1]];
     }
 
-    let dates = `${startDate}&nbsp;&mdash;&nbsp;${endDate}`;
+    const title = cities.join(` &mdash; `);
+    const cost = this._data.totalCost;
+
+    let dates = this._formateDates(this._data.dateFrom, this._data.dateTo);
 
     return (
       `<section class="trip-main__trip-info  trip-info">
@@ -40,5 +31,25 @@ export default class TripInfo extends Smart {
         </p>
       </section>`
     );
+  }
+
+
+  _formateDates(dateFrom, dateTo) {
+
+    if (!dateFrom || !dateTo) {
+      return ``;
+    }
+
+    let startDate = moment(dateFrom).format(`MMM DD`);
+    let endDate = moment(dateTo).format(`MMM DD`);
+
+    const isSameMonth = moment(dateFrom)
+      .isSame(dateTo, `month`);
+
+    if (isSameMonth) {
+      endDate = moment(dateTo).format(`DD`);
+    }
+
+    return `${startDate}&nbsp;&mdash;&nbsp;${endDate}`;
   }
 }

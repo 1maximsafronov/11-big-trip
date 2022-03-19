@@ -9,6 +9,8 @@ export default class Point extends Observer {
 
   setPoints(points) {
     this._points = createStructureById(points);
+
+    this._notify(`some-event`, this.getPoints());
   }
 
   getPoints() {
