@@ -29,17 +29,20 @@ export default class TripInfoController {
     replace(this._tripInfoComponent, prevComponent);
 
     remove(prevComponent);
-
     prevComponent = null;
+  }
+
+  _getPointPrice(point) {
+    const offersPrice = point.offers.reduce((acc, offer) => acc + offer.price, 0);
+
+    return point.basePrice + offersPrice;
   }
 
   _getTripInfoData() {
     const points = this._pointsModel.getPoints()
       .sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
 
-    const tripInfo = points.reduce((acc, point, index) => {
-      const price = acc.totalCost + point.basePrice;
-
+    const tripInfo = points.reduce((acc, point) => {
       const newArr = [...acc.cities];
       const newCity = point.destination.name;
 
@@ -48,7 +51,7 @@ export default class TripInfoController {
       }
 
       return extendObject(acc, {
-        totalCost: price,
+        totalCost: acc.totalCost + this._getPointPrice(point),
         cities: newArr,
       });
 
@@ -74,7 +77,7 @@ export default class TripInfoController {
     };
   }
 
-  _handlePointsModelChange(updateType, payload) {
+  _handlePointsModelChange(updateType) {
     if (
       updateType === UpdateType.MAJOR_POINT_UPDATE ||
       updateType === UpdateType.INIT
