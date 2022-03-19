@@ -13,7 +13,8 @@ export default class EventEdit extends Smart {
     this._data = extendObject(event, {
       isDisabled: false,
       isSaving: false,
-      isDeleting: false
+      isDeleting: false,
+      currentOffers: []
     });
     this._offers = offers;
     this._destinations = destinations;
@@ -30,6 +31,7 @@ export default class EventEdit extends Smart {
     this._destinationChageHandler = this._destinationChageHandler.bind(this);
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
+    this._offersChangeHandler = this._offersChangeHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -40,7 +42,10 @@ export default class EventEdit extends Smart {
   }
 
   _getDetails() {
-    return new DetailsComponent(this._data.destination, this._getOffers());
+    this.updateData({
+      currentOffers: this._getOffers()
+    }, true);
+    return new DetailsComponent(this._data.destination, this._data.currentOffers);
   }
 
   _getTemplate() {
@@ -60,14 +65,18 @@ export default class EventEdit extends Smart {
   }
 
   _getOffers() {
+    // TODO: Исправить визуальный сброс выбранных доп.опций послеотправки формы
     const isOfferChecked = (offer) => {
       return this._data.offers
           .some((pointOffer) => offer.title === pointOffer.title);
     };
 
     if (this._offers[this._data.type]) {
-      return this._offers[this._data.type].map((offer) => {
-        return extendObject(offer, {isChecked: isOfferChecked(offer)});
+      return this._offers[this._data.type].map((offer, index) => {
+        return extendObject(offer, {
+          id: `${index}-${this._data.id}`,
+          isChecked: isOfferChecked(offer)
+        });
       });
     }
 
@@ -134,6 +143,8 @@ export default class EventEdit extends Smart {
       .addEventListener(`change`, this._destinationChageHandler);
     this.getInnerElement(`.event__input--price`)
         .addEventListener(`input`, this._priceInputHanlder);
+    this.getInnerElement(`.event__details`)
+      .addEventListener(`change`, this._offersChangeHandler);
   }
 
   _typeChangeHandler(evt) {
@@ -173,12 +184,47 @@ export default class EventEdit extends Smart {
     }, false);
   }
 
+  _offersChangeHandler(evt) {
+    if (evt.target.tagName === `INPUT`) {
+      evt.preventDefault();
+      // console.log(`${evt.target.id} - ${evt.target.checked}`);
+      const changedOfferID = evt.target.id.replace(`event-offer-`, ``);
+      const isChecked = evt.target.checked;
+
+      const currentOffers = this._data.currentOffers.slice()
+        .map((offer) => {
+          if (offer.id === changedOfferID) {
+            return extendObject(offer, {isChecked});
+          }
+          return offer;
+        });
+
+      this.updateData({
+        currentOffers,
+      }, true);
+    }
+  }
+
   _submitHandler(evt) {
     evt.preventDefault();
-    const newData = extendObject({}, this._data);
+
+    const newOffers = this._data.currentOffers.reduce((acc, item) =>{
+      if (item.isChecked) {
+        delete item.id;
+        delete item.isChecked;
+
+        return [...acc, item];
+      }
+
+      return [...acc];
+    }, []);
+
+    const newData = extendObject(this._data, {offers: newOffers});
+
     delete newData.isDisabled;
     delete newData.isSaving;
     delete newData.isDeleting;
+    delete newData.currentOffers;
     this._callback.submit(newData);
   }
 

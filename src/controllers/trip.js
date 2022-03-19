@@ -229,8 +229,12 @@ export default class Trip {
     switch (userAction) {
       case UserAction.UPDATE_POINT:
         this._pointController[payload.id].setViewState(PointViewState.SAVING);
+
         this._api.updatePoint(payload)
-        .then((point) => this._pointsModel.updatePoint(updateType, point));
+          .then((point) => {
+            logToConsole(`Обновляем данные точки`, point);
+            this._pointsModel.updatePoint(updateType, point);
+          });
         break;
       case UserAction.ADD_POINT:
         logToConsole(`Пытаемся добавить точку маршрута`, payload);

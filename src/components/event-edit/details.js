@@ -1,23 +1,21 @@
 import Abstract from "../abstract";
 import {createElement, render} from "../../utils/render";
-import {nanoid} from "nanoid";
 
 // !Небольшой фикс для url картинок
 const fixPicUrl = (url) => {
   return url.replace(`http`, `https`);
 };
 
-const createOfferItemTemplate = ({title, price, isChecked}) => {
-  const name = nanoid();
+const createOfferItemTemplate = ({id, title, price, isChecked}) => {
   return (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox visually-hidden"
         type="checkbox"
-        id="event-offer-${name}-1"
-        name="event-offer-${name}"
+        id="event-offer-${id}"
+        name="event-offer-${id}"
         ${isChecked ? `checked` : ``}
       >
-      <label class="event__offer-label" for="event-offer-${name}-1">
+      <label class="event__offer-label" for="event-offer-${id}">
         <span class="event__offer-title">${title}</span>
         &plus;
         &euro;&nbsp;<span class="event__offer-price">${price}</span>
