@@ -48,7 +48,7 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
 
-    this._newPointController = new NewPointController(this._container, this._handleViewAction);
+    this._newPointController = new NewPointController(this._container, this._offersModel, this._destinationsModel, this._handleViewAction);
   }
 
   init(status) {
@@ -73,12 +73,14 @@ export default class Trip {
   createNewEvent() {
     logToConsole(`Создание новой точки`);
     this._currentSortType = SortType.DEFAULT;
-    remove(this._sortComponent);
-    this._sortComponent = null;
-    this._clearPointsList();
-    this._renderSort();
+
+    // remove(this._sortComponent);
+    // this._sortComponent = null;
+    // this._clearPointsList();
+    // this._renderSort();
     this._renderNewPoint();
-    this._renderTripDays();
+
+    // this._renderTripDays();
   }
 
   _renderNewPoint() {

@@ -105,8 +105,11 @@ const createTemplate = (event, destinations) => {
     isDisabled,
     isSaving,
     isDeleting
-
   } = event;
+
+  // !Костыль для пустого значения при создании новой точки
+  const {name: dastinationName = ``} = destination || {};
+
   const placeholder = getEventTypePlaceholder(type);
   const startTime = moment(dateFrom).format(`DD/MM/YY HH:mm`);
   const endTime = moment(dateTo).format(`DD/MM/YY HH:mm`);
@@ -120,7 +123,7 @@ const createTemplate = (event, destinations) => {
         <label class="event__label  event__type-output" for="event-destination-${eventId}">
           ${capitalizeFirstLetter(type)} ${placeholder}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-${eventId}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${eventId}">
+        <input class="event__input  event__input--destination" id="event-destination-${eventId}" type="text" name="event-destination" value="${dastinationName}" list="destination-list-${eventId}">
         <datalist id="destination-list-${eventId}">
           ${destinations.map((item) => (`<option value="${item}"></option>`)).join(`\n`)}
         </datalist>

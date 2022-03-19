@@ -3,31 +3,23 @@ import {RenedrPosition} from "../const";
 import {remove, render} from "../utils/render";
 import {nanoid} from "nanoid";
 
-const emptiPoint = {
-  id: nanoid(),
-  type: `taxi`,
-  dateTo: new Date(),
-  dateFrom: new Date(),
-  basePrice: 0,
-  isFavorite: false,
-  destination: {
-    name: ``,
-    pictures: []
-  },
-  offers: [],
-};
 
 export default class NewPointController {
-  constructor(container, changeData) {
+  constructor(container, offersModel, destinationsModel, changeData) {
     this._container = container;
-    this._eventEditComponent = null;
+    this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
     this._changeData = changeData;
+
+    this._eventEditComponent = null;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
   init() {
-    this._eventEditComponent = new EventEditComponent(emptiPoint, []);
+    const offers = this._offersModel.getOffers();
+    const destinations = this._destinationsModel.getDestinations();
+    this._eventEditComponent = new EventEditComponent(this._getEmptyPoint(), offers, destinations);
     this._eventEditComponent.getElement().classList.add(`trip-events__item`);
     render(this._container, this._eventEditComponent);
 
@@ -44,5 +36,18 @@ export default class NewPointController {
 
   destroy() {
     remove(this._eventEditComponent);
+  }
+
+  _getEmptyPoint() {
+    return {
+      id: nanoid(),
+      type: `taxi`,
+      dateTo: new Date(),
+      dateFrom: new Date(),
+      basePrice: 0,
+      isFavorite: false,
+      destination: null,
+      offers: [],
+    };
   }
 }
