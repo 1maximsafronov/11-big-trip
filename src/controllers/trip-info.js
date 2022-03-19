@@ -75,7 +75,10 @@ export default class TripInfoController {
   }
 
   _handlePointsModelChange(updateType, payload) {
-    if (updateType === UpdateType.MAJOR_POINT_UPDATE) {
+    if (
+      updateType === UpdateType.MAJOR_POINT_UPDATE ||
+      updateType === UpdateType.INIT
+    ) {
       this.init();
     }
   }
