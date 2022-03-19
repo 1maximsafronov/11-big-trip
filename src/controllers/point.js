@@ -1,6 +1,6 @@
 import {remove, render, replace} from "../utils/render";
 import {extendObject, logToConsole} from "../utils/common";
-import {UserAction} from "../const";
+import {UserAction, UpdateType} from "../const";
 import EventEditComponent from "../components/event-edit";
 import EventComponent from "../components/event";
 import EventContainer from "../components/event-container";
@@ -161,6 +161,7 @@ export default class Point {
     logToConsole(`Обновляем данные точки`, updatedPoint);
     this._changeData(
         UserAction.UPDATE_POINT,
+        UpdateType.MAJOR_POINT_UPDATE,
         updatedPoint
     );
   }
@@ -168,6 +169,7 @@ export default class Point {
   _handleFavoriteClick() {
     this._changeData(
         UserAction.UPDATE_POINT,
+        UpdateType.MINOR_POINT_UPDATE,
         extendObject(this._event, {isFavorite: !this._event.isFavorite})
     );
   }
@@ -180,6 +182,7 @@ export default class Point {
   _handleDeleteClickHandler() {
     this._changeData(
         UserAction.DELETE_POINT,
+        UpdateType.MAJOR_POINT_UPDATE,
         this._event
     );
   }

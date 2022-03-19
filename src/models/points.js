@@ -7,17 +7,17 @@ export default class Point extends Observer {
     this._points = {};
   }
 
-  setPoints(points) {
+  setPoints(updateType, points) {
     this._points = createStructureById(points);
 
-    this._notify(`some-event`, this.getPoints());
+    this._notify(updateType, this.getPoints());
   }
 
   getPoints() {
     return Object.values(this._points).slice();
   }
 
-  updatePoint(point) {
+  updatePoint(updateType, point) {
     if (!(point.id in this._points)) {
       throw new Error(`Невозмонжно ОБНОВИТЬ токчку которой не существует`);
     }
@@ -26,17 +26,17 @@ export default class Point extends Observer {
 
     this._points[point.id] = newPoint;
 
-    this._notify(`some-event`, this.getPoints());
+    this._notify(updateType, point);
   }
 
-  deletePoint(point) {
+  deletePoint(updateType, point) {
     if (!(point.id in this._points)) {
       throw new Error(`Невозмонжно УДАЛИТЬ токчку которой не существует`);
     }
 
     delete this._points[point.id];
 
-    this._notify(`some-event`, this.getPoints());
+    this._notify(updateType, point);
   }
 
   static adaptToClient(data) {

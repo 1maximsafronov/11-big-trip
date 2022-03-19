@@ -7,7 +7,7 @@ import NoPointsComponent from "../components/no-points";
 import TripDayItemComponent from "../components/trip-day-item";
 import TripDaysListComponent from "../components/trip-days";
 import {render, remove, replace} from "../utils/render";
-import {SortType, UserAction} from "../const";
+import {SortType, UserAction, UpdateType} from "../const";
 import {logToConsole} from "../utils/common";
 
 const sortPoints = (sortType, points) => {
@@ -39,6 +39,8 @@ export default class Trip {
     this._pointController = {};
     this._currentSortType = SortType.DEFAULT;
 
+    this._isLoading = true;
+
     this._sortComponent = null;
     this._tripDaysListComponent = null;
     this._loadingComponent = new LoadingComponent();
@@ -47,12 +49,14 @@ export default class Trip {
     this._handleSortChange = this._handleSortChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelsEvent = this._handleModelsEvent.bind(this);
+    this._pointsModel.addObserver(this._handleModelsEvent);
 
     this._newPointController = new NewPointController(this._container, this._offersModel, this._destinationsModel, this._handleViewAction);
   }
 
-  init(status) {
-    if (status === `loading`) {
+  init() {
+    if (this._isLoading) {
       this._renderLoading();
       return;
     }
@@ -201,17 +205,12 @@ export default class Trip {
     this._renderTripDays();
   }
 
-  _handleViewAction(userAction, payload) {
+  _handleViewAction(userAction, updateType, payload) {
     switch (userAction) {
       case UserAction.UPDATE_POINT:
         this._pointController[payload.id].setViewState(PointViewState.SAVING);
         this._api.updatePoint(payload)
-        .then((point) => {
-          logToConsole(`Обновили точку`, point);
-          this._pointsModel.updatePoint(point);
-          this._pointController[point.id].resetView();
-          this._pointController[point.id].init(point);
-        });
+        .then((point) => this._pointsModel.updatePoint(updateType, point));
         break;
       case UserAction.ADD_POINT:
         logToConsole(`Пытаемся добавить точку маршрута`, payload);
@@ -219,11 +218,22 @@ export default class Trip {
       case UserAction.DELETE_POINT:
         this._pointController[payload.id].setViewState(PointViewState.DELETING);
         this._api.deletePoint(payload)
-          .then(() => {
-            this._pointsModel.deletePoint(payload);
-            this._clearPointsList();
-            this._renderTripDays();
-          });
+          .then(() => this._pointsModel.deletePoint(updateType, payload));
+        break;
+    }
+  }
+
+  _handleModelsEvent(updateType, payload) {
+    switch (updateType) {
+      case UpdateType.INIT:
+        this._isLoading = false;
+        break;
+      case UpdateType.MINOR_POINT_UPDATE:
+        this._pointController[payload.id].init(payload);
+        break;
+      case UpdateType.MAJOR_POINT_UPDATE:
+        this._clearPointsList();
+        this._renderTripDays();
         break;
     }
   }

@@ -1,6 +1,7 @@
 import TripInfoComponent from "../components/trip-info";
 import {render, replace, remove} from "../utils/render";
 import {extendObject} from "../utils/common";
+import {UpdateType} from "../const";
 
 export default class TripInfoController {
   constructor(container, pointsModel) {
@@ -73,7 +74,9 @@ export default class TripInfoController {
     };
   }
 
-  _handlePointsModelChange() {
-    this.init();
+  _handlePointsModelChange(updateType, payload) {
+    if (updateType === UpdateType.MAJOR_POINT_UPDATE) {
+      this.init();
+    }
   }
 }

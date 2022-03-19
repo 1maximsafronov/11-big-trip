@@ -1,5 +1,5 @@
 import {render} from "./utils/render";
-// import {RenedrPosition} from "./const";
+import {UpdateType} from "./const";
 import Api from "./api/api.js";
 import Store from "./api/store";
 import Provider from "./api/provider";
@@ -72,7 +72,7 @@ render(tripControlsComponent, [
   filterComponent
 ]);
 
-tripController.init(`loading`);
+tripController.init();
 
 const loadDestinations = () => {
   return apiWithProvider.getDestinations()
@@ -86,7 +86,11 @@ const loadOffers = () => {
 
 const loadPoints = () => {
   return apiWithProvider.getPoints()
-    .then((data) => pointsModel.setPoints(data));
+    .then((data) => pointsModel.setPoints(UpdateType.INIT, data))
+    .catch((err) => {
+      pointsModel.setPoints(UpdateType.INIT, []);
+      throw new Error(err);
+    });
 };
 
 const loadData = () => {
@@ -98,4 +102,4 @@ const loadData = () => {
 };
 
 loadData()
-  .then(() => tripController.init(`loaded`));
+  .then(() => tripController.init());
