@@ -65,9 +65,13 @@ export default class EventEdit extends Smart {
           .some((pointOffer) => offer.title === pointOffer.title);
     };
 
-    return this._offers[this._data.type].map((offer) => {
-      return extendObject(offer, {isChecked: isOfferChecked(offer)});
-    });
+    if (this._offers[this._data.type]) {
+      return this._offers[this._data.type].map((offer) => {
+        return extendObject(offer, {isChecked: isOfferChecked(offer)});
+      });
+    }
+
+    return [];
   }
 
   _setStartDatepicker() {
@@ -134,7 +138,10 @@ export default class EventEdit extends Smart {
 
   _typeChangeHandler(evt) {
     if (evt.target.value !== this._data.type) {
-      this.updateData({type: evt.target.value});
+      this.updateData({
+        type: evt.target.value,
+        offers: [],
+      });
     }
   }
 
