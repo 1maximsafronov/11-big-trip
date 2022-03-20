@@ -3,6 +3,11 @@ import {remove, render} from "../utils/render";
 import {nanoid} from "nanoid";
 import {UserAction, UpdateType} from "../const";
 
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABOARDING: `ABOARDING`,
+};
 
 export default class NewPointController {
   constructor(container, offersModel, destinationsModel, changeData) {
@@ -12,7 +17,7 @@ export default class NewPointController {
     this._changeData = changeData;
 
     this._eventEditComponent = null;
-
+    this._resetFormState = this._resetFormState.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._submitHandler = this._submitHandler.bind(this);
   }
@@ -38,6 +43,16 @@ export default class NewPointController {
   }
 
   _submitHandler(newPoint) {
+    if (
+      newPoint.basePrice <= 0 ||
+      newPoint.destination === null ||
+      newPoint.dateTo === null
+    ) {
+      this._eventEditComponent.shake(this._resetFormState);
+
+      return;
+    }
+
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MAJOR_POINT_UPDATE,
@@ -47,6 +62,36 @@ export default class NewPointController {
 
   destroy() {
     remove(this._eventEditComponent);
+  }
+
+  _resetFormState() {
+    this._eventEditComponent.updateData({
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false
+    });
+
+    this._eventEditComponent.getElement().classList.add(`trip-events__item`);
+  }
+
+  setViewState(state) {
+    switch (state) {
+      case State.SAVING:
+        this._eventEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this._eventEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+      case State.ABOARDING:
+        this._eventEditComponent.shake(this._resetFormState);
+        break;
+    }
   }
 
   _getEmptyPoint() {

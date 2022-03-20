@@ -96,13 +96,12 @@ export default class Trip {
     this._currentSortType = SortType.DEFAULT;
 
 
-    // remove(this._sortComponent);
-    // this._sortComponent = null;
-    // this._clearPointsList();
-    // this._renderSort();
+    remove(this._sortComponent);
+    this._sortComponent = null;
+    this._clearPointsList();
+    this._renderSort();
     this._renderNewPoint();
-
-    // this._renderTripDays();
+    this._renderTripDays();
   }
 
   _renderNewPoint() {
@@ -261,6 +260,8 @@ export default class Trip {
         break;
       case UpdateType.MAJOR_POINT_UPDATE:
         this._clearPointsList();
+        this._newPointController.destroy();
+        this._newPointController = null;
         this._renderTripDays();
         break;
       case UpdateType.FILTER_CHANGE:
