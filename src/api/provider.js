@@ -1,6 +1,5 @@
 import PointsModel from "../models/points";
 import {createStructureById} from "../utils/common";
-import {logToConsole} from "../utils/common";
 
 const NameSpace = {
   POINTS: `points`,

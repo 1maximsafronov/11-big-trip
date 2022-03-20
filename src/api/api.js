@@ -1,4 +1,3 @@
-import {logToConsole} from "../utils/common";
 import PointsModel from "../models/points";
 
 const Method = {

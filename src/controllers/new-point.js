@@ -1,5 +1,4 @@
 import EventEditComponent from "../components/event-edit";
-import {RenedrPosition} from "../const";
 import {remove, render} from "../utils/render";
 import {nanoid} from "nanoid";
 import {UserAction, UpdateType} from "../const";
