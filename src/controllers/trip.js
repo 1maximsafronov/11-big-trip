@@ -237,6 +237,7 @@ export default class Trip {
           });
         break;
       case UserAction.ADD_POINT:
+        this._newPointController.setViewState(PointViewState.SAVING);
         this._api.createPoint(payload)
           .then((response) => {
             this._pointsModel.createPoint(updateType, response);
