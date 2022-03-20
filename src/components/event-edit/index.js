@@ -159,6 +159,15 @@ export default class EventEdit extends Smart {
   _destinationChageHandler(evt) {
     const newDestinationName = evt.target.value;
     const newData = this._destinations.find((item) => item.name === newDestinationName);
+
+    if (this._data.destination === null) {
+      logToConsole(`Изменяем destination`, newDestinationName);
+
+      this.updateData({destination: newData});
+
+      return;
+    }
+
     if (this._data.destination.name !== newDestinationName && newData) {
       logToConsole(`Изменяем destination`, newDestinationName);
 

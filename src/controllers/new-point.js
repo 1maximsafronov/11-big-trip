@@ -2,6 +2,7 @@ import EventEditComponent from "../components/event-edit";
 import {RenedrPosition} from "../const";
 import {remove, render} from "../utils/render";
 import {nanoid} from "nanoid";
+import {UserAction, UpdateType} from "../const";
 
 
 export default class NewPointController {
@@ -14,13 +15,16 @@ export default class NewPointController {
     this._eventEditComponent = null;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._submitHandler = this._submitHandler.bind(this);
   }
 
   init() {
     const offers = this._offersModel.getOffers();
     const destinations = this._destinationsModel.getDestinations();
     this._eventEditComponent = new EventEditComponent(this._getEmptyPoint(), offers, destinations);
+
     this._eventEditComponent.getElement().classList.add(`trip-events__item`);
+    this._eventEditComponent.setSubmitHandler(this._submitHandler);
     render(this._container, this._eventEditComponent);
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
@@ -32,6 +36,14 @@ export default class NewPointController {
       this.destroy();
       document.removeEventListener(`keydown`, this._escKeyDownHandler);
     }
+  }
+
+  _submitHandler(newPoint) {
+    this._changeData(
+        UserAction.ADD_POINT,
+        UpdateType.MAJOR_POINT_UPDATE,
+        newPoint
+    );
   }
 
   destroy() {

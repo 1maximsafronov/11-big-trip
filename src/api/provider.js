@@ -1,5 +1,6 @@
 import PointsModel from "../models/points";
 import {createStructureById} from "../utils/common";
+import {logToConsole} from "../utils/common";
 
 const NameSpace = {
   POINTS: `points`,
@@ -54,9 +55,13 @@ export default class Provider {
     return Promise.reject(`Не описаны действия в режиме offline`);
   }
 
-  createPoint() {
+  createPoint(newPoint) {
     if (Provider.isOnline()) {
-      // тут будет запрос на создание точки маршрута
+      return this._api.createPoint(newPoint)
+        .then((response) => {
+
+          return response;
+        });
     }
 
     return Promise.reject(`Не описаны действия в режиме offline`);

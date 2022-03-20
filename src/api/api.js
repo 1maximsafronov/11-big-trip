@@ -1,4 +1,4 @@
-// import {logToConsole} from "../utils/common";
+import {logToConsole} from "../utils/common";
 import PointsModel from "../models/points";
 
 const Method = {
@@ -36,7 +36,15 @@ export default class Api {
     return this._load({url: `points/${point.id}`, method: Method.DELETE});
   }
 
-  createPoint() {
+  createPoint(newPoint) {
+    return this._load({
+      url: `points`,
+      method: Method.POST,
+      body: JSON.stringify(PointsModel.adaptToServer(newPoint)),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+    .then(Api.toJSON)
+    .then((response) => PointsModel.adaptToClient(response));
 
   }
 

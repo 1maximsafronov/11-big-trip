@@ -69,7 +69,7 @@ export default class Trip {
     this._pointsModel.addObserver(this._handleModelsEvent);
     this._filterModel.addObserver(this._handleModelsEvent);
 
-    this._newPointController = new NewPointController(this._container, this._offersModel, this._destinationsModel, this._handleViewAction);
+    this._newPointController = null;
   }
 
   init() {
@@ -95,6 +95,7 @@ export default class Trip {
     logToConsole(`Создание новой точки`);
     this._currentSortType = SortType.DEFAULT;
 
+
     // remove(this._sortComponent);
     // this._sortComponent = null;
     // this._clearPointsList();
@@ -105,6 +106,7 @@ export default class Trip {
   }
 
   _renderNewPoint() {
+    this._newPointController = new NewPointController(this._container, this._offersModel, this._destinationsModel, this._handleViewAction);
     this._newPointController.init();
   }
 
@@ -229,15 +231,16 @@ export default class Trip {
     switch (userAction) {
       case UserAction.UPDATE_POINT:
         this._pointController[payload.id].setViewState(PointViewState.SAVING);
-
         this._api.updatePoint(payload)
           .then((point) => {
-            logToConsole(`Обновляем данные точки`, point);
             this._pointsModel.updatePoint(updateType, point);
           });
         break;
       case UserAction.ADD_POINT:
-        logToConsole(`Пытаемся добавить точку маршрута`, payload);
+        this._api.createPoint(payload)
+          .then((response) => {
+            this._pointsModel.createPoint(updateType, response);
+          });
         break;
       case UserAction.DELETE_POINT:
         this._pointController[payload.id].setViewState(PointViewState.DELETING);

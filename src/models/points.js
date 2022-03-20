@@ -29,6 +29,12 @@ export default class Point extends Observer {
     this._notify(updateType, point);
   }
 
+  createPoint(updateType, point) {
+    this._points = extendObject(this._points, {[point.id]: point});
+
+    this._notify(updateType, point);
+  }
+
   deletePoint(updateType, point) {
     if (!(point.id in this._points)) {
       throw new Error(`Невозмонжно УДАЛИТЬ токчку которой не существует`);
